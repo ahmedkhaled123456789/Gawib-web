@@ -6,13 +6,13 @@ type Category = {
 };
 
 const categories: Category[] = [
-  { id: 1, title: "عامة",iconUrl: "/images/categories/c5.png" },
-  { id: 2, title: "منوعة", iconUrl: "/images/categories/c3.png" },
-  { id: 3, title: "السعودية", iconUrl: "/images/categories/c1.png" },
+  { id: 1, title: "علوم",iconUrl: "/images/categories/c4.png" },
+  { id: 2, title: "دول وجغرافيا", iconUrl: "/images/categories/c3.png" },
+  { id: 3, title: "رياضة", iconUrl: "/images/categories/c5.png" },
   { id: 4, title: "فنون", iconUrl: "/images/categories/c2.png" },
-  { id: 5, title: "رياضة", iconUrl: "/images/categories/c3.png" },
-  { id: 6, title: "دول وجغرافيا", iconUrl: "/images/categories/c4.png" },
-  { id: 7, title: "علوم", iconUrl: "/images/categories/c5.png" },
+  { id: 5, title: "السعودية", iconUrl: "/images/categories/c1.png" },
+  { id: 6, title: "منوعة  ", iconUrl: "" },
+  { id: 7, title: "عامة", iconUrl: "" },
 ];
 
 const CategoryGrid = () => {
@@ -24,10 +24,10 @@ const CategoryGrid = () => {
             {cat.iconUrl ? (
               <img src={cat.iconUrl} alt={cat.title} className="h-16 mx-auto" />
             ) : (
-              <div className="h-12 w-12 bg-gray-100 rounded" />
+              <div className="h-12 w-12  rounded" />
             )}
           </div>
-          <p className="text-lg font-bold  p-2 border-t border-black font-medium text-blue-900">{cat.title}</p>
+          <p className="text-lg font-bold  p-2 border-t border-black  text-blue-900">{cat.title}</p>
         </div>
       ))}
     </div>

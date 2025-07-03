@@ -1,4 +1,3 @@
-import { Mail, MapPin, Phone } from "lucide-react"
 
 const SocialMedia = () => {
   return (
@@ -15,17 +14,19 @@ const SocialMedia = () => {
 <div  className="flex items-center justify-between gap-4 mt-40 " >
      <div className="border border-gray-200 rounded px-6 py-6 space-y-6 text-right text-[#085E9C] text-base bg-gray-50 shadow-sm">
           <div className="flex items-center gap-3">
-            <MapPin size={20} />
-            <span>المملكة العربية السعودية</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Mail size={20} />
-            <span>info@jawb.com</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Phone size={20} />
-            <span>+966505960258</span>
-          </div>
+                    <img src="/images/3g.png" className="w-6 h-6" alt="" />
+         
+                     <span className="text-lg">المملكة العربية السعودية</span>
+                   </div>
+                   <div className="flex items-center gap-3">
+                    <img src="/images/1g.png" className="w-6 h-6" alt="" />
+                     <span className="text-sm">info@jawb.com</span>
+                   </div>
+                   <div className="flex items-center gap-3">
+                    <img src="/images/2g.png" className="w-6 h-6" alt="" />
+         
+                     <span className="text-sm">966505960258+</span>
+                   </div>
         </div>
 
        

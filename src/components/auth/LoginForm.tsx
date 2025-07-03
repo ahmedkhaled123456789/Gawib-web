@@ -13,22 +13,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form
     <>
       {/* Toggle Buttons */}
       <div className="flex justify-center mb-4">
-        <div className="grid grid-cols-2 w-full max-w-xs border border-gray-300 rounded overflow-hidden">
-          <button
-            onClick={() => setLoginMethod("email")}
-            className={`px-4 py-2 text-sm transition ${
-              loginMethod === "email" ? "bg-[#FFC629] font-bold" : "text-gray-700"
-            }`}
-          >
-            البريد الإلكتروني
-          </button>
+        <div className="grid grid-cols-2 p-1 w-full max-w-xs border border-gray-300 rounded overflow-hidden">
+        
           <button
             onClick={() => setLoginMethod("phone")}
             className={`px-4 py-2 text-sm transition ${
-              loginMethod === "phone" ? "bg-[#FFC629] font-bold" : "text-gray-700"
+              loginMethod === "phone" ? "bg-[#FFC629] font-bold text-[#085E9C]" : "text-gray-700"
             }`}
           >
             رقم الجوال
+          </button>
+            <button
+            onClick={() => setLoginMethod("email")}
+            className={`px-4 py-2 text-sm transition ${
+              loginMethod === "email" ? "bg-[#FFC629] text-[#085E9C] font-bold" : "text-gray-700"
+            }`}
+          >
+            البريد الإلكتروني
           </button>
         </div>
       </div>

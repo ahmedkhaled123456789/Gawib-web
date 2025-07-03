@@ -35,7 +35,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       </div>
 
       {/* البريد الإلكتروني */}
-      <input
+       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <input
         type="email"
         name="email"
         placeholder="البريد الإلكتروني"
@@ -53,6 +54,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         value={form.phone}
         onChange={handleChange}
       />
+       </div>
+    
 
       {/* كلمة المرور وتأكيدها */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

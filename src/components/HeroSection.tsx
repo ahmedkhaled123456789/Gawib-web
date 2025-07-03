@@ -4,7 +4,7 @@ const HeroSection = () => {
   return (
     <section className="text-center py-6  mt-8">
         <div className="text-center mb-12">
-          <h1 className="text-3xl   text-blue-700 mb-6">
+          <h1 className="text-3xl   text-[#085E9C] mb-6">
             استمتع بوقتك واللعب مع جاوب
           </h1>
           <p className="text-black text-md leading-relaxed max-w-3xl mx-auto">
