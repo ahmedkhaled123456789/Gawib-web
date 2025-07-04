@@ -4,7 +4,7 @@ function App() {
  
   return (
     <>
-       <main dir="rtl" className="font-sans bg-gray-50 min-h-screen">
+       <main dir="rtl" className="font-Tajawal bg-gray-50 min-h-screen">
       <Layout />
       
     </main>

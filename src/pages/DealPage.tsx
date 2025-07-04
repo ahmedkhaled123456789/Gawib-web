@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 const DealPage = () => {
   return (
             <div className="flex items-center justify-center min-h-screen p-12 sm:px-2 sm:py-2">
-  <div className="  max-w-md mx-auto font-sans mt-12">
+  <div className="  max-w-md mx-auto font-Tajawal mt-12">
                 <h2 className="text-[#085E9C] font-bold  text-center text-3xl mb-6"> عملية ناجحة بمبلغ 130 </h2>
 
         <div className=" flex flex-col gap-16">

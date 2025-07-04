@@ -1,5 +1,7 @@
-import "react-phone-number-input/style.css";
 
+import {useState } from 'react';
+import 'react-phone-input-2/lib/style.css';
+import PhoneInput from 'react-phone-input-2';
 interface RegisterFormProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
@@ -12,8 +14,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   handleChange,
   passwordsMatch,
 }) => {
+  const [phone, setPhone] = useState("966562596215+");
+
+
   return (
-    <div className="space-y-4 w-full max-w-2xl mx-auto font-sans">
+    <div className="space-y-4 w-full max-w-2xl mx-auto font-Tajawal">
       {/* الاسم الأول واسم العائلة */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <input
@@ -46,13 +51,30 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       />
 
       {/* رقم الجوال */}
-      <input
-        type="tel"
-        name="phone"
-        placeholder="رقم الجوال"
-        className="border px-3 py-2 rounded focus:outline-none w-full text-right"
-        value={form.phone}
-        onChange={handleChange}
+         <PhoneInput
+        country={'sa'} // علم السعودية
+        value={phone}
+        onChange={setPhone}
+        
+        inputProps={{
+          dir: 'rtl',
+        }}
+        containerStyle={{ direction: 'rtl' }}
+        inputStyle={{
+          width: '100%',
+          textAlign: 'right',
+          borderRadius: '6px',
+          paddingRight: '50px',
+          padding:'20px 10px '
+        }}
+        buttonStyle={{
+        backgroundColor: 'transparent',
+         border: 'none',
+         
+          position: 'absolute',
+          left: '0',
+          right: 'auto',
+        }}
       />
        </div>
     

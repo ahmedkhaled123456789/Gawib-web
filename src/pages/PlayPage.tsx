@@ -2,7 +2,7 @@ const PlayPage = () => {
   const gameImages = Array(6).fill({ img: '/images/products/p9.png' });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white p-6 font-sans sm:px-2 sm:py-2">
+    <div className="min-h-screen flex items-center justify-center bg-white p-6 font-Tajawal sm:px-2 sm:py-2">
       <div className="max-w-4xl w-full bg-white border rounded-lg shadow-lg p-6 space-y-6 text-center">
         {/* Main Content */}
         <div className="flex flex-col md:flex-row gap-24 items-center">

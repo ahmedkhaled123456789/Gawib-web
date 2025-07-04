@@ -1,7 +1,7 @@
 
 const SocialMedia = () => {
   return (
-  <div className="min-h-screen  max-w-3xl mx-auto font-sans  p-12">
+  <div className="min-h-screen  max-w-3xl mx-auto font-Tajawal  p-12">
       {/* العنوان الرئيسي */}
       <h2 className="text-[#085E9C] text-2xl font-bold text-center mb-10">
 التواصل الاجتماعي      </h2>
