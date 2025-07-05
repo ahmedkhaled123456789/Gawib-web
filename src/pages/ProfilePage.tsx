@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import 'react-phone-input-2/lib/style.css';
+import PhoneInput from 'react-phone-input-2';
 const ProfilePage = () => {
   const [tab, setTab] = useState("account");
   const [form, setForm] = useState({
@@ -85,7 +86,7 @@ const ProfilePage = () => {
               className="w-full border px-3 py-2 rounded focus:outline-none"
             />
 
-            <div className="flex items-center border rounded overflow-hidden">
+            {/* <div className="flex items-center border rounded overflow-hidden">
               <span className="bg-white px-2 py-2 flex items-center">
                 <img
                   src="https://flagcdn.com/w40/sa.png"
@@ -102,8 +103,32 @@ const ProfilePage = () => {
                 placeholder="رقم الجوال"
                 className="w-full px-2 py-2 focus:outline-none"
               />
-            </div>
-
+            </div> */}
+ <PhoneInput
+        country={'sa'} // علم السعودية
+        value={form.phone}
+        onChange={() =>handleChange}
+        
+        inputProps={{
+          dir: 'rtl',
+        }}
+        containerStyle={{ direction: 'rtl' }}
+        inputStyle={{
+          width: '100%',
+          textAlign: 'right',
+          borderRadius: '6px',
+          paddingRight: '50px',
+          padding:'20px 10px '
+        }}
+        buttonStyle={{
+        backgroundColor: 'transparent',
+         border: 'none',
+         
+          position: 'absolute',
+          left: '0',
+          right: 'auto',
+        }}
+      />
             <button
               type="submit"
               className="w-full py-2 border border-[#085E9C] text-[#085E9C] rounded hover:bg-[#085E9C] hover:text-white transition"

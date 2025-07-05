@@ -11,7 +11,7 @@ const AuthPage: React.FC = () => {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    phone: "966562596",
     password: "",
     confirmPassword: "",
   });

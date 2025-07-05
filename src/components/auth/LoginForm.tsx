@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-
+import 'react-phone-input-2/lib/style.css';
+import PhoneInput from 'react-phone-input-2';
 interface LoginFormProps {
   loginMethod: "email" | "phone";
   setLoginMethod: (method: "email" | "phone") => void;
@@ -9,6 +10,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form, handleChange }) => {
+   
   return (
     <>
       {/* Toggle Buttons */}
@@ -37,17 +39,32 @@ const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form
       {/* Form Fields */}
       <div className="space-y-4 w-full max-w-md mx-auto">
         {loginMethod === "phone" && (
-          <div className="flex items-center border rounded px-3 py-2">
-            <input
-              type="tel"
-              name="phone"
-              placeholder="أدخل رقم الجوال"
-              className="flex-1 focus:outline-none text-right"
-              value={form.phone}
-              onChange={handleChange}
-            />
-          </div>
-        )}
+               <PhoneInput
+        country={'sa'} // علم السعودية
+        value={form.phone}
+        onChange={() =>handleChange}
+        
+        inputProps={{
+          dir: 'rtl',
+        }}
+        containerStyle={{ direction: 'rtl' }}
+        inputStyle={{
+          width: '100%',
+          textAlign: 'right',
+          borderRadius: '6px',
+          paddingRight: '50px',
+          padding:'20px 10px '
+        }}
+        buttonStyle={{
+        backgroundColor: 'transparent',
+         border: 'none',
+         
+          position: 'absolute',
+          left: '0',
+          right: 'auto',
+        }}
+      />
+         )}
 
         {loginMethod === "email" && (
           <input

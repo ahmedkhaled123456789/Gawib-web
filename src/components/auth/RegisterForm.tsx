@@ -1,5 +1,3 @@
-
-import {useState } from 'react';
 import 'react-phone-input-2/lib/style.css';
 import PhoneInput from 'react-phone-input-2';
 interface RegisterFormProps {
@@ -14,8 +12,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   handleChange,
   passwordsMatch,
 }) => {
-  const [phone, setPhone] = useState("966562596");
-
+ 
 
   return (
     <div className="space-y-4 w-full max-w-2xl mx-auto font-Tajawal">
@@ -53,8 +50,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       {/* رقم الجوال */}
          <PhoneInput
         country={'sa'} // علم السعودية
-        value={phone}
-        onChange={setPhone}
+        value={form.phone}
+        onChange={() => handleChange}
         
         inputProps={{
           dir: 'rtl',
