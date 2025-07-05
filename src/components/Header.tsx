@@ -10,7 +10,7 @@ const Header = () => {
   <div className="max-w-6xl mx-auto flex flex-row-reverse justify-between items-center">
 
     {/* Right: شراء | إهداء لعبة */}
-    <nav className="hidden md:flex items-center text-black font-semibold gap-6">
+    <nav className="hidden text-2xl   md:flex items-center text-black font-medium gap-6">
       <Link to="/auth">إنشاء حساب | دخول</Link>
     </nav>
 
@@ -23,7 +23,7 @@ const Header = () => {
 
     {/* Left: إنشاء حساب | دخول */}
    
- <nav className="hidden md:flex items-center text-black font-semibold gap-6">
+ <nav className="hidden text-2xl md:flex items-center text-black font-medium gap-6">
       <Link to="/game">شراء | إهداء لعبة</Link>
     </nav>
     {/* Mobile Menu Icon */}

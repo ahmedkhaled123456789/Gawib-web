@@ -14,7 +14,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   handleChange,
   passwordsMatch,
 }) => {
-  const [phone, setPhone] = useState("966562596215+");
+  const [phone, setPhone] = useState("966562596");
 
 
   return (

@@ -17,7 +17,7 @@ const GameSetup: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-black min-h-screen  space-y-4">
+    <div className="flex flex-col items-center justify-center text-black min-h-screen  gap-4">
       <input
         type="text"
         placeholder="اسم اللعبة"
