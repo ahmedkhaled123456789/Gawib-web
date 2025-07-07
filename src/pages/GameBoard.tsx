@@ -1,19 +1,21 @@
 import { Link } from "react-router-dom";
 
 const categories = [
-  { title: "اعلام", image: "/public/images/products/p1.png",active: false },
-  { title: "الدوري الاوروبي", image: "/images/products/p2.png" ,active: false},
-  { title: "عدنان ولينا", image: "/images/products/p6.png" ,active: false},
-  { title: "معالم", image: "/images/products/p4.png" ,active: true},
-  { title: "عملات", image: "/images/products/p5.png",active: true },
-  { title: "باب الحارة", image: "/images/products/p3.png",active: true },
+    { title: "عدنان ولينا", image: "/images/products/p9.png" ,active: false},
+
+  { title: "الدوري الاوروبي", image: "/images/products/p12.png" ,active: false},
+  { title: "اعلام", image: "/public/images/products/p5.png",active: false },
+  { title: "باب الحارة", image: "/images/products/p8.png",active: true },
+  { title: "عملات", image: "/images/products/p2.png",active: true },
+    { title: "معالم", image: "/images/products/p3.png" ,active: true},
+
 ];
 
 const GameBoard = () => {
   return (
-    <div className="flex flex-col justify-between h-full p-8 lg:p-4 sm:p-4 mb-6">
+    <div className="flex flex-col justify-between h-full p-8 lg:p-12 sm:p-4 mb-6">
   {/* Grid of Categories */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-2">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-2">
     {categories.map((cat, index) => (
       <div key={index} className={`flex items-center justify-center ${cat.active ? "" : "opacity-[.5]"}`}>
         {/* Left Column - Buttons */}
@@ -23,7 +25,7 @@ const GameBoard = () => {
               key={`left-${val}`}
               className={`${
                 cat.active ? "bg-[#085E9C] text-white" : "border border-[#085E9C] text-[#085E9C]"
-              } w-16 sm:w-20 h-10 rounded rounded-br-xl rounded-tl-xl text-xs sm:text-sm font-bold`}
+              } w-16 sm:w-20 h-16 rounded rounded-br-xl rounded-tl-xl text-xs sm:text-sm font-bold`}
             >
               {val}
             </button>
@@ -31,7 +33,7 @@ const GameBoard = () => {
         </div>
 
         {/* Center - Image & Title */}
-        <div className="flex flex-col items-center justify-center border rounded-md border-[#085E9C] w-full h-full p-2 bg-white mx-2 sm:mx-4">
+        <div className="flex flex-col items-center justify-center border rounded-md border-[#085E9C] w-full h-full p-2 bg-white ">
           <img src={cat.image} alt={cat.title} className="h-24 sm:h-32 w-full object-contain mb-4" />
           <span className="text-sm sm:text-lg shadow-lg text-[#085E9C] border p-2 w-full rounded font-bold text-center">
             {cat.title}
@@ -45,7 +47,7 @@ const GameBoard = () => {
               key={`right-${val}`}
               className={`${
                 cat.active ? "bg-[#085E9C] text-white" : "border border-[#085E9C] text-[#085E9C]"
-              } w-16 sm:w-20 h-10 rounded rounded-bl-xl rounded-tr-xl text-xs sm:text-sm font-bold`}
+              } w-16 sm:w-20 h-16 rounded rounded-bl-xl rounded-tr-xl text-xs sm:text-sm font-bold`}
             >
               {val}
             </button>

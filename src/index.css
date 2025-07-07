@@ -12,3 +12,9 @@ body {
   box-sizing: border-box;
 
 }
+.filter-blue {
+  filter: brightness(0) saturate(100%) invert(22%) sepia(98%) saturate(479%) hue-rotate(172deg) brightness(95%) contrast(103%);
+}
+.filter-white {
+  filter: brightness(0) saturate(100%) invert(100%);
+}

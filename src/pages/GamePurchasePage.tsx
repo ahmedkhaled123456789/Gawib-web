@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const GamePurchasePage = () => {
   const [activeTab, setActiveTab] = useState<"buy" | "gift">("buy");
-  const [selectedCoins, setSelectedCoins] = useState<number | null>(30);
+  const [selectedCoins, setSelectedCoins] = useState<number | null>(430);
   const [discountCode, setDiscountCode] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ const GamePurchasePage = () => {
         <div className="grid grid-cols-2 w-full p-1 max-w-xs border border-gray-300  overflow-hidden">
           <button
             onClick={() => setActiveTab("buy")}
-            className={`px-4 py-2 text-sm ${
+            className={`px-4 py-2 text-xl ${
               activeTab === "buy" ? "bg-[#085E9C] text-white" : "text-gray-700"
             }`}
           >            شراء
@@ -40,7 +40,7 @@ const GamePurchasePage = () => {
           </button>
           <button
             onClick={() => setActiveTab("gift")}
-            className={`px-4 py-2 text-sm ${
+            className={`px-4 py-2 text-xl ${
               activeTab === "gift" ? "bg-[#085E9C] text-white" : "text-gray-700"
             }`}
           >
@@ -56,17 +56,17 @@ const GamePurchasePage = () => {
           <button
             key={option.value}
             onClick={() => setSelectedCoins(option.value)}
-            className={`border text-sm rounded py-2 ${
+            className={`border text-xl rounded py-2 ${
               selectedCoins === option.value
                 ? "bg-yellow-400 text-[#085E9C] font-bold"
                 : "text-[#fff] bg-[#085E9C]"
             }`}
           >
-         <div className={` pb-2 mx-2 border-b-2  ${
+         <div className={` pb-2 mx-2 border-b-2    ${
               selectedCoins === option.value
                 ? "border-[#085E9C] "
                 : "border-[#FFC629] "
-            }`}>  {option.value} <br/> لعبة </div> <div className="">ريال {option.price}</div>
+            }`}>  {option.value} <br/> لعبة </div> <div className="flex items-center justify-center gap-2 m-2"><span>{option.price}</span>     <img src="/public/images/Saudi_Riyal_Symbol-1.png" className={`w-5 h-5 ${ selectedCoins === option.value?"filter-blue" :"filter-white"} `} alt="" /> </div>
           </button>
         ))}
       </div>
@@ -87,8 +87,8 @@ const GamePurchasePage = () => {
         </button>
        </div>
        
-        <p className="text-sm   border px-3 py-2 rounded border-[#085E9C]  text-gray-600 text-center">
-          ستدفع الآن {selectedCoins ?? 0} ﷼
+        <p className=" flex items-center justify-center gap-2 font-bold text-xl   border px-3 py-2 rounded border-[#085E9C]  text-[#085E9C]  text-center">
+        <span>  ستدفع الآن <span className="mr-2">{selectedCoins ?? 0}</span></span>     <img src="/public/images/Saudi_Riyal_Symbol-1.png" className="w-5 h-5 filter-blue  " alt="" /> 
         </p>
       </div>
 

@@ -49,8 +49,8 @@ const PaymentPage = () => {
               value={cvv}
               onChange={(e) => setCvv(e.target.value)}
             />
-<div className="text-center border px-3 py-2 rounded border-gray-300 text-base sm:text-lg font-bold text-[#085E9C]">
-              ﷼ 130
+<div className="flex items-center justify-center gap-4  border px-3 py-2 rounded border-gray-300 text-base sm:text-lg font-bold text-[#085E9C]">
+            <span>130</span>  <img src="/public/images/Saudi_Riyal_Symbol-1.png" className="w-5 h-5 filter-blue  " alt="" /> 
             </div>
           </div>
 
