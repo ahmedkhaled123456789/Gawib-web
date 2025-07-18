@@ -5,12 +5,16 @@ interface RegisterFormProps {
   form: any;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   passwordsMatch: boolean;
+  handleRegister: () => void;
+  loading: boolean;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
   form,
   handleChange,
   passwordsMatch,
+  loading,
+  handleRegister
 }) => {
  
 
@@ -20,7 +24,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <input
           type="text"
-          name="firstName"
+          name="first_name"
           placeholder="الاسم الأول"
           className="border px-3 py-2 rounded focus:outline-none w-full text-right"
           value={form.firstName}
@@ -28,7 +32,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         />
         <input
           type="text"
-          name="lastName"
+          name="last_name"
           placeholder="اسم العائلة"
           className="border px-3 py-2 rounded focus:outline-none w-full text-right"
           value={form.lastName}
@@ -50,7 +54,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       {/* رقم الجوال */}
          <PhoneInput
         country={'sa'} // علم السعودية
-        value={form.phone}
+        value={form.phone_number}
         onChange={() => handleChange}
         
         inputProps={{
@@ -91,7 +95,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           name="confirmPassword"
           placeholder="تأكيد كلمة المرور"
           className="border px-3 py-2 rounded focus:outline-none w-full text-right"
-          value={form.confirmPassword}
+          value={form.password_confirmation}
           onChange={handleChange}
         />
       </div>
@@ -103,9 +107,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
       {/* زر إنشاء حساب */}
       <div className="flex justify-center mt-6">
-        <button className="w-full font-bold border border-[#085E9C] text-[#085E9C] py-2 rounded hover:bg-[#085E9C] hover:text-white transition">
-          إنشاء حساب
-        </button>
+       <button
+  onClick={handleRegister}
+  disabled={loading || !passwordsMatch}
+  className="w-full font-bold border border-[#085E9C] text-[#085E9C] py-2 rounded hover:bg-[#085E9C] hover:text-white transition disabled:opacity-50"
+>
+  {loading ? "جارٍ الإنشاء..." : "إنشاء حساب"}
+</button>
       </div>
     </div>
   );

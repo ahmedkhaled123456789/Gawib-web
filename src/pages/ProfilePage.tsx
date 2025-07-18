@@ -1,7 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import 'react-phone-input-2/lib/style.css';
 import PhoneInput from 'react-phone-input-2';
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store";
+import { getUser, updateUser } from "../store/auth/authSlice";
 const ProfilePage = () => {
+
+   const dispatch = useDispatch<AppDispatch>();
+    const { user } = useSelector((state: RootState) => state.auth);
+  
+   useEffect(() => {
+    dispatch(getUser({ id: "2" }));
+  }, [dispatch]);
+console.log(user)
   const [tab, setTab] = useState("account");
   const [form, setForm] = useState({
     firstName: "محمد",
@@ -15,6 +26,17 @@ const ProfilePage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const userId = "2"; // Or dynamically get from Redux, auth, or route param
+    await dispatch(updateUser({ id: userId, data: form })).unwrap();
+    alert("✅ تم حفظ التغييرات بنجاح!");
+  } catch (err) {
+    alert("❌ فشل حفظ التغييرات: " + err);
+  }
+};
 
   const passwordsMatch =
     form.password === form.confirmPassword || tab === "account";
@@ -57,7 +79,7 @@ const ProfilePage = () => {
 
         {/* Account Form */}
         {tab === "account" && (
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <input
                 type="text"
@@ -130,17 +152,17 @@ const ProfilePage = () => {
         }}
       />
             <button
-              type="submit"
-              className="w-full py-2 border border-[#085E9C] text-[#085E9C] rounded hover:bg-[#085E9C] hover:text-white transition"
-            >
-              حفظ التغييرات
-            </button>
+  type="submit"
+  className="w-full py-2 border border-[#085E9C] text-[#085E9C] rounded hover:bg-[#085E9C] hover:text-white transition"
+>
+  حفظ التغييرات
+</button>
           </form>
         )}
 
         {/* Password Form */}
         {tab === "password" && (
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
+          <form  onSubmit={handleSubmit} className="space-y-3">
             <input
               type="password"
               placeholder="كلمة المرور الحالية"
@@ -169,7 +191,7 @@ const ProfilePage = () => {
             )}
 
             <button
-              type="submit"
+             type="submit"
               className="w-full py-2 border border-[#085E9C] text-[#085E9C] rounded hover:bg-[#085E9C] hover:text-white transition"
             >
               تغيير كلمة المرور

@@ -15,6 +15,7 @@ import RulesPage from "../pages/RulesPage";
 import ContactUs from "../pages/ContactUs";
 import SocialMedia from "../pages/SocialMedia";
 import DealPage from "../pages/DealPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 
 const Routers = () => {
   return (
@@ -24,6 +25,7 @@ const Routers = () => {
             <Route path="auth" element={<AuthPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="forgetPassword" element={<ForgetPassword />} />
+            <Route path="resetPassword" element={<ResetPasswordPage />} />
             <Route path="game" element={<GamePurchasePage />} />
             <Route path="payment" element={<PaymentPage />} />
             <Route path="GameBoard" element={<GameBoard />} />

@@ -7,9 +7,11 @@ interface LoginFormProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleLogin: () => void;
+  loading: boolean;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form, handleChange }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form, handleChange ,handleLogin,loading}) => {
    
   return (
     <>
@@ -41,7 +43,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form
         {loginMethod === "phone" && (
                <PhoneInput
         country={'sa'} // علم السعودية
-        value={form.phone}
+        value={form.phone_number}
         onChange={() =>handleChange}
         
         inputProps={{
@@ -88,9 +90,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form
 
         {/* Login + Forget Password */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
-          <button className="w-full sm:w-1/2 font-bold border border-[#085E9C] text-[#085E9C] py-2 rounded hover:bg-[#085E9C] hover:text-white transition">
-            دخول
-          </button>
+         <button
+  onClick={handleLogin}
+  disabled={loading}
+  className="w-full sm:w-1/2 font-bold border border-[#085E9C] text-[#085E9C] py-2 rounded hover:bg-[#085E9C] hover:text-white transition disabled:opacity-50"
+>
+  {loading ? "جاري الدخول..." : "دخول"}
+</button>
+
 
           <Link to="/forgetPassword" className="text-sm text-gray-500 text-center sm:text-right hover:underline">
             نسيت كلمة المرور؟
