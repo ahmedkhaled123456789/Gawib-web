@@ -45,7 +45,7 @@ export const getSocialLink = createAsyncThunk<
 );
 
 
-// ================ get games ===============
+// ================ getSocialLinks ===============
 export const getSocialLinks = createAsyncThunk<
   SocialLinksData,
   { id: string }, 
@@ -70,7 +70,7 @@ const SocialLinksSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // getsocialLinks
-     .addCase(getSocialLinks.fulfilled, (state, action: PayloadAction<SocialLinksData>) => {
+     .addCase(getSocialLink.fulfilled, (state, action: PayloadAction<SocialLinksData>) => {
         state.socialLinks = action.payload;
         state.loading = false;
         state.error = null;
