@@ -3,7 +3,13 @@ import GameSetup from "../components/GameSetup";
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import ProductSection from "../components/products/ProductSection";
-
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store";
+import { useEffect } from "react";
+import { getCategories } from "../store/categoriesSlice";
+import { getGames } from "../store/gameSlice";
+import { getGamePackages } from "../store/GamePackagesSlice";
+import { getQuestions } from "../store/questionsSlice";
 const products = [
   {
     title: "دول وجغرافيا",
@@ -48,6 +54,17 @@ const products = [
 ];
 
 const HomePage = () => {
+  const dispatch = useDispatch<AppDispatch>();
+    const {categories } = useSelector((state: RootState) => state.category);
+  
+    useEffect(() =>{
+dispatch(getCategories())
+ dispatch(getGamePackages())
+ 
+
+
+    },[])
+    console.log(categories)
   return (
     <>
      {/* Header with Menu Icon */}

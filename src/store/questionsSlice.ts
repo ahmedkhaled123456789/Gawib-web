@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { useGetData } from "../hooks/useGetData";
+import { useGetDataToken } from "../utils/api";
 
  
 interface QuestionData {
@@ -32,7 +32,7 @@ export const getQuestion = createAsyncThunk<
   "question/getQuestion",
   async ({ id }, thunkAPI) => {
     try {
-      const res = await useGetData<QuestionData>(`questions/${id}`);
+      const res = await useGetDataToken<QuestionData>(`show/question/${id}`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -45,13 +45,13 @@ export const getQuestion = createAsyncThunk<
 // ================ getQuestions ===============
 export const getQuestions = createAsyncThunk<
   QuestionData,
-  { id: string }, 
+   void,
   { rejectValue: string }
 >(
   "question/getQuestions",
   async (_, thunkAPI) => {
     try {
-      const res = await useGetData<QuestionData>(`questions`);
+      const res = await useGetDataToken<QuestionData>(`show/questions`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;

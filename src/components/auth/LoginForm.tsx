@@ -4,6 +4,8 @@ import PhoneInput from 'react-phone-input-2';
 interface LoginFormProps {
   loginMethod: "email" | "phone";
   setLoginMethod: (method: "email" | "phone") => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setForm: React.Dispatch<React.SetStateAction<any>>; 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,7 +13,7 @@ interface LoginFormProps {
   loading: boolean;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form, handleChange ,handleLogin,loading}) => {
+const LoginForm: React.FC<LoginFormProps> = ({ setForm,loginMethod, setLoginMethod, form, handleChange ,handleLogin,loading}) => {
    
   return (
     <>
@@ -41,31 +43,37 @@ const LoginForm: React.FC<LoginFormProps> = ({ loginMethod, setLoginMethod, form
       {/* Form Fields */}
       <div className="space-y-4 w-full max-w-md mx-auto">
         {loginMethod === "phone" && (
-               <PhoneInput
-        country={'sa'} // علم السعودية
-        value={form.phone_number}
-        onChange={() =>handleChange}
-        
-        inputProps={{
-          dir: 'rtl',
-        }}
-        containerStyle={{ direction: 'rtl' }}
-        inputStyle={{
-          width: '100%',
-          textAlign: 'right',
-          borderRadius: '6px',
-          paddingRight: '50px',
-          padding:'20px 10px '
-        }}
-        buttonStyle={{
-        backgroundColor: 'transparent',
-         border: 'none',
-         
-          position: 'absolute',
-          left: '0',
-          right: 'auto',
-        }}
-      />
+              <PhoneInput
+  country={'eg'}
+  value={form.phone_number?.replace('+', '') || ''}
+  onChange={(value: string) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      phone_number: `+${value}`,
+    }))
+  }
+  inputProps={{
+    dir: 'rtl',
+    name: 'phone_number', // optional but useful
+  }}
+  containerStyle={{ direction: 'rtl' }}
+  inputStyle={{
+    width: '100%',
+    textAlign: 'right',
+    borderRadius: '6px',
+    paddingRight: '50px',
+    padding: '20px 10px',
+  }}
+  buttonStyle={{
+    backgroundColor: 'transparent',
+    border: 'none',
+    position: 'absolute',
+    left: '0',
+    right: 'auto',
+  }}
+/>
+
          )}
 
         {loginMethod === "email" && (

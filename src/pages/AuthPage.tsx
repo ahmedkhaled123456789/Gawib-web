@@ -5,10 +5,12 @@ import Footer from "../components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { loginUser, signupUser } from "../store/auth/authSlice";
-  
+import { useNavigate } from "react-router-dom";
+
 const AuthPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate(); 
 
   const [isRegister, setIsRegister] = useState(false);
   const [loginMethod, setLoginMethod] = useState<"phone" | "email">("phone");
@@ -17,7 +19,7 @@ const AuthPage: React.FC = () => {
     first_name: "",
     last_name: "",
     email: "",
-    phone_number: "966562596",
+    phone_number: "",
     password: "",
     password_confirmation: "",
   });
@@ -28,19 +30,24 @@ const AuthPage: React.FC = () => {
 
   const passwordsMatch = form.password === form.password_confirmation;
 
-  const handleLogin = () => {
+  const handleLogin = async() => {
     const payload =
       loginMethod === "email"
         ? { email: form.email, password: form.password }
         : { phone: form.phone_number, password: form.password };
 
-    dispatch(loginUser(payload));
+ const result = await dispatch(loginUser(payload));
+    if (loginUser.fulfilled.match(result)) {
+      navigate("/"); 
+    }    
   };
 
-  const handleRegister = () => {
+  const handleRegister = async() => {
     if (!passwordsMatch) return;
-    dispatch(signupUser(form));
-  };
+ const result = await dispatch(signupUser(form));
+    if (signupUser.fulfilled.match(result)) {
+      navigate("/"); 
+    }  };
 
   return (
     <div className="flex items-center justify-center min-h-screen px-6 py-12 sm:px-2 sm:py-2" dir="rtl">
@@ -72,6 +79,7 @@ const AuthPage: React.FC = () => {
         {isRegister ? (
           <RegisterForm
             form={form}
+            setForm={setForm}
             handleChange={handleChange}
             passwordsMatch={passwordsMatch}
             handleRegister={handleRegister}
@@ -79,6 +87,7 @@ const AuthPage: React.FC = () => {
           />
         ) : (
           <LoginForm
+            setForm={setForm}
             loginMethod={loginMethod}
             setLoginMethod={setLoginMethod}
             form={form}

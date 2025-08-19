@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { useGetData } from "../hooks/useGetData";
+import { useGetDataToken } from "../utils/api";
 
  
 interface CategoryData {
@@ -11,15 +11,15 @@ interface CategoryData {
 }
 
 interface CategoryState {
-  category: CategoryData | null;
-  categories :  CategoryData | null;
+   category: CategoryData | null;
+  categories : CategoryData[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: CategoryState = {
-  category: null,
-  categories:null,
+ category: null,
+  categories: [], 
   loading: false,
   error: null,
 };
@@ -33,7 +33,7 @@ export const getCategory = createAsyncThunk<
   "category/getCategory",
   async ({ id }, thunkAPI) => {
     try {
-      const res = await useGetData<CategoryData>(`categories/${id}`);
+      const res = await useGetDataToken<CategoryData>(`show/category/${id}`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -45,14 +45,14 @@ export const getCategory = createAsyncThunk<
 
 // ================ getUser ===============
 export const getCategories = createAsyncThunk<
-  CategoryData,
-  { id: string }, // argument type
+  CategoryData[], 
+  void, 
   { rejectValue: string }
 >(
   "category/getCategories",
   async (_, thunkAPI) => {
     try {
-      const res = await useGetData<CategoryData>(`categories`);
+      const res = await useGetDataToken<CategoryData[]>(`show/categories`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -60,6 +60,7 @@ export const getCategories = createAsyncThunk<
     }
   }
 );
+
 // ================ Slice ===============
 const categoriesSlice = createSlice({
   name: "category",
@@ -74,11 +75,11 @@ const categoriesSlice = createSlice({
         state.error = null;
       })
       // getCategories
-.addCase(getCategories.fulfilled, (state, action: PayloadAction<CategoryData>) => {
-        state.categories = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
+.addCase(getCategories.fulfilled, (state, action: PayloadAction<CategoryData[]>) => {
+  state.categories = action.payload;
+  state.loading = false;
+  state.error = null;
+})
   
            
   },

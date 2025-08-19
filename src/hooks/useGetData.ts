@@ -2,15 +2,23 @@ import type { AxiosRequestConfig } from "axios";
 import baseUrl from "../Api/baseURL";
 
 // Use AxiosRequestConfig to define params or other config settings
-const useGetData = async <T,>(
+const useGetData = async <T>(
   url: string,
-  params?: AxiosRequestConfig<unknown>
+  options?: AxiosRequestConfig
 ): Promise<T> => {
+  const config: AxiosRequestConfig = {
+    ...options,
+    withCredentials: true,
+    headers: {
+      ...(options?.headers || {}),
+    },
+  };
+
   try {
-    const res = await baseUrl.get<T>(url, params);
+    const res = await baseUrl.get<T>(url, config);
     return res.data;
   } catch (error) {
-    console.error(`Error fetching data from ${url}:`, error);
+    console.error(`❌ Error fetching data from ${url}:`, error);
     throw new Error("Failed to fetch data");
   }
 };

@@ -2,15 +2,15 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../store/contactSlice";
 import type { AppDispatch, RootState } from "../store";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const ContactUs = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error, contact } = useSelector((state: RootState) => state.contact);
 
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     message: "",
   });
@@ -23,20 +23,20 @@ const ContactUs = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { firstName, lastName, email, message } = form;
+    const { first_name, last_name, email, message } = form;
 
-    if (!firstName || !lastName || !email || !message) {
+    if (!first_name || !last_name || !email || !message) {
       toast.error("يرجى تعبئة جميع الحقول");
       return;
     }
 
     try {
       await dispatch(addContact(form)).unwrap();
-      toast.success("✅ تم إرسال رسالتك بنجاح");
-      setForm({ firstName: "", lastName: "", email: "", message: "" });
+      toast.success("تم إرسال رسالتك بنجاح");
+      setForm({ first_name: "", last_name: "", email: "", message: "" });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      toast.error("❌ حدث خطأ أثناء الإرسال");
+      toast.error(" حدث خطأ أثناء الإرسال");
     }
   };
 
@@ -49,16 +49,16 @@ const ContactUs = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <input
               type="text"
-              name="firstName"
-              value={form.firstName}
+              name="first_name"
+              value={form.first_name}
               onChange={handleChange}
               placeholder="الاسم الأول"
               className="border border-gray-300 rounded px-4 py-2 text-right w-full"
             />
             <input
               type="text"
-              name="lastName"
-              value={form.lastName}
+              name="last_name"
+              value={form.last_name}
               onChange={handleChange}
               placeholder="اسم العائلة"
               className="border border-gray-300 rounded px-4 py-2 text-right w-full"
@@ -121,6 +121,7 @@ const ContactUs = () => {
           </div>
         </div>
       </form>
+       <ToastContainer  />
     </div>
   );
 };

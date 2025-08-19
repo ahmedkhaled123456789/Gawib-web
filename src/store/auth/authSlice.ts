@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { insertData } from "../../utils/api"; // ✅ renamed and moved out of hooks
+import { insertData } from "../../utils/api";
 import { useGetData } from "../../hooks/useGetData";
 import { useInUpdateData } from "../../hooks/useUpdateData";
- 
+
 interface UserData {
- firstName: string;
+  data: any;
+  firstName: string;
   lastName: string;
   email: string;
   phone: string;
@@ -20,24 +21,22 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem("user") || "null"), // ✅ load from localStorage
   loading: false,
   error: null,
 };
+
 interface UpdateUserArgs {
   id: string;
-  data: Partial<UserData>; // or any DTO type you use for update
+  data: Partial<UserData>;
 }
+
 // ================ Login ===============
-export const loginUser = createAsyncThunk<
-  UserData,                     // Return type
-  Record<string, unknown>,         // Argument type
-  { rejectValue: string }       // Rejection type
->(
+export const loginUser = createAsyncThunk<UserData, Record<string, unknown>, { rejectValue: string }>(
   "auth/loginUser",
   async (data, thunkAPI) => {
     try {
-      const res = await insertData<typeof data, UserData>("auth/login", data);
+      const res = await insertData<typeof data, UserData>("auth/user/login", data);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -45,17 +44,13 @@ export const loginUser = createAsyncThunk<
     }
   }
 );
- 
+
 // ================ Signup ===============
-export const signupUser = createAsyncThunk<
-  UserData,
-  Record<string, unknown>,
-  { rejectValue: string }
->(
+export const signupUser = createAsyncThunk<UserData, Record<string, unknown>, { rejectValue: string }>(
   "auth/signupUser",
   async (data, thunkAPI) => {
     try {
-      const res = await insertData<typeof data, UserData>("auth/register", data);
+      const res = await insertData<typeof data, UserData>("auth/user/register", data);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -65,11 +60,7 @@ export const signupUser = createAsyncThunk<
 );
 
 // ================ getUser ===============
-export const getUser = createAsyncThunk<
-  UserData,
-  { id: string }, // argument type
-  { rejectValue: string }
->(
+export const getUser = createAsyncThunk<UserData, { id: string }, { rejectValue: string }>(
   "auth/getUser",
   async ({ id }, thunkAPI) => {
     try {
@@ -82,14 +73,8 @@ export const getUser = createAsyncThunk<
   }
 );
 
-
-
 // ================ update User ===============
-export const updateUser = createAsyncThunk<
-  UserData,
-  UpdateUserArgs,
-  { rejectValue: string }
->(
+export const updateUser = createAsyncThunk<UserData, UpdateUserArgs, { rejectValue: string }>(
   "auth/updateUser",
   async ({ id, data }, thunkAPI) => {
     try {
@@ -101,20 +86,17 @@ export const updateUser = createAsyncThunk<
     }
   }
 );
+
 // ================ log out ===============
-export const logOut = createAsyncThunk<
-  UserData,
-  Record<string, unknown>,
-  { rejectValue: string }
->(
+export const logOut = createAsyncThunk<UserData, Record<string, unknown>, { rejectValue: string }>(
   "auth/logout",
   async (data, thunkAPI) => {
     try {
-      const res = await insertData<typeof data, UserData>("auth/logout", data);
+      const res = await insertData<typeof data, UserData>("auth/user/logout", data);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "Signup failed");
+      return thunkAPI.rejectWithValue(err.response?.data.message || "Logout failed");
     }
   }
 );
@@ -127,42 +109,64 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Login Cases
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<UserData>) => {
-        state.user = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
-      
+     .addCase(loginUser.fulfilled, (state, action: PayloadAction<UserData>) => {
+  state.user = action.payload;
+  state.loading = false;
+  state.error = null;
+
+   const token = action.payload.data?.access?.token;
+  if (token) {
+    localStorage.setItem("token", token);
+  }
+
+   const userInfo = action.payload.data?.authenticatable;
+  if (userInfo) {
+    localStorage.setItem("user", JSON.stringify(userInfo));
+  }
+})
+
 
       // Signup Cases
-      
-      .addCase(signupUser.fulfilled, (state, action: PayloadAction<UserData>) => {
+     .addCase(signupUser.fulfilled, (state, action: PayloadAction<UserData>) => {
+  state.user = action.payload;
+  state.loading = false;
+  state.error = null;
+
+  const token = action.payload.data?.access?.token;
+  const tokenType = action.payload.data?.access?.token_type;
+  if (token && tokenType) {
+    localStorage.setItem("token", `${tokenType} ${token}`);
+  }
+
+  const userInfo = action.payload.data?.authenticatable;
+  if (userInfo) {
+    localStorage.setItem("user", JSON.stringify(userInfo));
+  }
+})
+
+
+      // Get User
+      .addCase(getUser.fulfilled, (state, action: PayloadAction<UserData>) => {
         state.user = action.payload;
         state.loading = false;
         state.error = null;
       })
 
-      // get user 
-     .addCase(getUser.fulfilled, (state, action: PayloadAction<UserData>) => {
-        state.user = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
-
-      //  update user
+      // Update User
       .addCase(updateUser.fulfilled, (state, action: PayloadAction<UserData>) => {
         state.user = action.payload;
         state.loading = false;
         state.error = null;
+        localStorage.setItem("user", JSON.stringify(action.payload)); // ✅ update localStorage on user update
       })
-            // Log Out Cases
-      
+
+      // Logout
       .addCase(logOut.fulfilled, (state) => {
         state.user = null;
-      state.loading = false;
-      state.error = null;
-      })
-     
+        state.loading = false;
+        state.error = null;
+        localStorage.removeItem("user"); // ✅ clear from localStorage
+      });
   },
 });
 

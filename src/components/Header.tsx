@@ -4,14 +4,20 @@ import { Menu, X } from "lucide-react"; // Or use Heroicons or your own SVGs
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+const user = localStorage.getItem("user");
+const logOut=()=>{
+  localStorage.removeItem("user");
+  window.location.reload();
+}
+console.log(user)
   return (
    <header className="bg-gradient-to-r from-blue-100 to-blue-200 p-4 shadow-md">
   <div className="max-w-6xl mx-auto flex flex-row-reverse justify-between items-center">
 
     {/* Right: شراء | إهداء لعبة */}
     <nav className="hidden text-2xl   md:flex items-center text-black font-medium gap-6">
-      <Link to="/auth">إنشاء حساب | دخول</Link>
+      {user ? <div onClick={logOut}>تسجيل الخروج</div> :  <Link to="/auth">إنشاء حساب | دخول</Link>}
+    
     </nav>
 
     {/* Center: Logo */}
