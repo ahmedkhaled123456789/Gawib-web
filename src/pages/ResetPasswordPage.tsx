@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { resetPassword } from "../store/resetPassword";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ResetPasswordPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.password);
 
   const [formData, setFormData] = useState({
@@ -19,15 +22,21 @@ const ResetPasswordPage = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (formData.password !== formData.password_confirmation) {
-      alert("كلمتا المرور غير متطابقتين");
+      toast("كلمتا المرور غير متطابقتين");
       return;
     }
 
-    dispatch(resetPassword(formData));
+    try {
+      await dispatch(resetPassword(formData)).unwrap();
+      navigate("/auth"); 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+     toast("خطأ في إعادة التعيين:", err);
+     }
   };
 
   return (

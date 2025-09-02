@@ -1,15 +1,13 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { useGetData } from "../hooks/useGetData";
+import { useGetDataToken } from "../hooks/useGetData";
 
  
 interface SocialLinksData {
  category_id: number;
  name: string;
-  description: string;
-  image:string;
-  is_active: boolean,
-
+ url: string;
+ icon:string;
  }
 
 interface SocialLinksState {
@@ -35,7 +33,7 @@ export const getSocialLink = createAsyncThunk<
   "socialLinks/getSocialLink",
   async ({ id }, thunkAPI) => {
     try {
-      const res = await useGetData<SocialLinksData>(`social-links/${id}`);
+      const res = await useGetDataToken<SocialLinksData>(`social-links/${id}`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -48,13 +46,13 @@ export const getSocialLink = createAsyncThunk<
 // ================ getSocialLinks ===============
 export const getSocialLinks = createAsyncThunk<
   SocialLinksData,
-  { id: string }, 
+  void, 
   { rejectValue: string }
 >(
   "socialLinks/getSocialLinks",
   async (_, thunkAPI) => {
     try {
-      const res = await useGetData<SocialLinksData>(`social-links`);
+      const res = await useGetDataToken<SocialLinksData>(`social-links`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;

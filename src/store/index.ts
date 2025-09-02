@@ -7,6 +7,8 @@ import gamePackageReducer from "./GamePackagesSlice";
 import discountReducer from "./DiscountSlice";
 import socialReducer from "./SocialLinksSlice";
 import categoriesReducer from "./categoriesSlice";
+import preGameReducer from "./preGameSlice";
+import settingReducer from "./settingSlice";
 
 const store = configureStore({
   reducer: {
@@ -17,8 +19,9 @@ const store = configureStore({
     gamePackage:gamePackageReducer,
     discount:discountReducer,
     social:socialReducer,
-    category:categoriesReducer
-
+    category:categoriesReducer,
+    preGame : preGameReducer,
+    settings:settingReducer,
 
 
   },

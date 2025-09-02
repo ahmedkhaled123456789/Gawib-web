@@ -1,4 +1,9 @@
+import { useLocation } from "react-router-dom";
+
 const AwnserPage = () => {
+  const location = useLocation();
+      const { answer } = location.state || {};
+      console.log(answer)
   return (
     <div className="flex flex-col md:flex-row gap-4 p-4 md:p-12 mb-12 items-stretch">
       

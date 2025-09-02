@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { useGetData } from "../hooks/useGetData";
+import { useGetDataToken } from "../hooks/useGetData";
 
  
 interface SettingData {
@@ -32,7 +32,7 @@ export const getSetting = createAsyncThunk<
   "setting/getSetting",
   async ({ id }, thunkAPI) => {
     try {
-      const res = await useGetData<SettingData>(`settings/${id}`);
+      const res = await useGetDataToken<SettingData>(`settings/${id}`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -45,13 +45,13 @@ export const getSetting = createAsyncThunk<
 // ================ getUser ===============
 export const getSettings = createAsyncThunk<
   SettingData,
-  { id: string }, 
+  void, 
   { rejectValue: string }
 >(
   "setting/getSettings",
   async (_, thunkAPI) => {
     try {
-      const res = await useGetData<SettingData>(`settings`);
+      const res = await useGetDataToken<SettingData>(`settings`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;

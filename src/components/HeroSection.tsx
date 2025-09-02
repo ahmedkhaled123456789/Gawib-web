@@ -1,6 +1,6 @@
 import CategoryGrid from "./CategoryGrid";
 
-const HeroSection = () => {
+const HeroSection = ({categories,loading,error}) => {
   return (
     <section className="text-center py-6  mt-8">
         <div className="text-center mb-12">
@@ -13,7 +13,7 @@ const HeroSection = () => {
             واختيار مجموعة أخرى وهكذا، اختيار الأخير يمكنك التوجه للفئات مباشرة
           </p>
         </div>
-<CategoryGrid/>
+<CategoryGrid  categories={categories} loading={loading} error={error} />
 
         <div className="text-center mt-8">
           <p className="text-black text-md ">
