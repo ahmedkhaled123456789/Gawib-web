@@ -1,6 +1,11 @@
+import type { CategoryData } from "../store/categoriesSlice";
 import CategoryGrid from "./CategoryGrid";
-
-const HeroSection = ({categories,loading,error}) => {
+interface HeroSectionProps {
+  categories: CategoryData[];
+  loading: boolean;
+  error: string | null;
+}
+const HeroSection = ({ categories, loading, error }: HeroSectionProps) => {
   return (
     <section className="text-center py-6  mt-8">
         <div className="text-center mb-12">

@@ -1,4 +1,11 @@
-const CategoryGrid = ({categories,loading,error}) => {
+import type { CategoryData } from "../store/categoriesSlice";
+
+interface HeroSectionProps {
+  categories: CategoryData[];
+  loading: boolean;
+  error: string | null;
+}
+const CategoryGrid = ({categories,loading,error}: HeroSectionProps) => {
 
 
  if (loading) return <p className="text-center">جاري التحميل...</p>;
@@ -6,8 +13,8 @@ const CategoryGrid = ({categories,loading,error}) => {
 
   return (
     <div className="grid grid-cols-3 md:grid-cols-7 gap-4 mt-12">
-     {Array.isArray(categories.data) && categories.data.length > 0 ? (
-  categories.data.map((cat, i) => (
+     {categories.length > 0 ? (
+  categories.map((cat, i) => (
        <div key={i} className="bg-white cursor-pointer  border border-black shadow  text-center hover:bg-blue-50 transition">
           <div className="h-24 flex items-center justify-center mb-2">
            {cat.image ? (

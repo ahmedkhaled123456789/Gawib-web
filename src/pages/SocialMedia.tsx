@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
-import { useEffect } from "react";
+import { useEffect} from "react";
 import { getSocialLinks } from "../store/SocialLinksSlice";
 
 const SocialMedia = () => {
@@ -11,16 +11,15 @@ const SocialMedia = () => {
     dispatch(getSocialLinks());
   }, [dispatch]);
 
-  // ✅ فلترة البيانات
-  const socialOnly = socialLinks?.data?.filter(
-    (item) =>
+   const socialOnly = socialLinks?.filter(
+    (item: { name: string; }) =>
       !item.name?.toLowerCase().includes("contact_email") &&
       !item.name?.toLowerCase().includes("phone") &&
       !item.name?.toLowerCase().includes("address")
   );
 
-  const contactInfo = socialLinks?.data?.filter(
-    (item) =>
+  const contactInfo = socialLinks?.filter(
+    (item: { name: string; }) =>
       item.name?.toLowerCase().includes("contact_email") ||
       item.name?.toLowerCase().includes("phone") ||
       item.name?.toLowerCase().includes("address")
@@ -29,14 +28,12 @@ const SocialMedia = () => {
   console.log(contactInfo)
    return (
     <div className="min-h-screen mx-auto font-Tajawal p-12">
-      {/* العنوان الرئيسي */}
-      <h2 className="text-[#085E9C] text-2xl font-bold text-center mb-24">
+       <h2 className="text-[#085E9C] text-2xl font-bold text-center mb-24">
         التواصل الاجتماعي
       </h2>
 
-      {/* ✅ روابط السوشيال */}
-      <div className="grid grid-cols-[repeat(7,minmax(70px,1fr))] gap-2">
-        {socialOnly?.map((item) => (
+       <div className="grid grid-cols-[repeat(7,minmax(70px,1fr))] gap-2">
+        {socialOnly.map((item) => (
           <a
             key={item.id}
             href={item.url}
@@ -77,22 +74,7 @@ const SocialMedia = () => {
         </div>
         </div>
 
-      {/* <div className="w-full flex items-start">
-        <div className="w-[400px] font-bold mt-40">
-          <div className="border border-gray-200 rounded px-6 py-12 space-y-6 text-right text-[#085E9C] bg-gray-100 shadow-sm">
-            {contactInfo?.map((item) => (
-              <div key={item.id} className="flex items-center gap-3">
-                <img
-                  src={`https://test.jawib.net/storage/${item.icon}`}
-                  className="w-6 h-6"
-                  alt=""
-                />
-                <span className="text-2xl">{item.url}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div> */}
+     
     </div>
   );
 };

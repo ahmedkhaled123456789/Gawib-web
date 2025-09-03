@@ -40,8 +40,7 @@ const navigate = useNavigate();
     .unwrap()
     .then((res) => {
       console.log("Game created successfully ✅", res);
-      // هنا res هو الرد اللي راجع من API
-      navigate("/GameBoard", { state: { game: res } });
+       navigate("/GameBoard", { state: { game: res } });
     })
     .catch((err) => {
       console.error("Error creating game ❌", err);

@@ -5,7 +5,8 @@ import { useGetData } from "../../hooks/useGetData";
 import { useInUpdateData } from "../../hooks/useUpdateData";
 
 interface UserData {
-  data: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any;
   firstName: string;
   lastName: string;
   email: string;

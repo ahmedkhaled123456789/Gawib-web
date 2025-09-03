@@ -1,27 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ProductCard from "./ProductCard";
 import { ArrowUp } from "lucide-react";
 
 interface Item {
   id: string;
+  name: string;
+  category_id: string;
+  description: string;
+  game_count: number;
   image: string;
-  title: string;
-  gamesCount: number;
+  is_free: boolean;
 }
-
 interface ProductSectionProps {
+  selectedIds: string[];
+  setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>;
   title: string;
   items: Item[];
 }
 
-const ProductSection: React.FC<ProductSectionProps> = ({selectedIds, setSelectedIds, title, items }) => {
+const ProductSection = ({selectedIds, setSelectedIds, title,  items }: ProductSectionProps) => {
 
   const handleSelect = (id: string) => {
     if (selectedIds.includes(id)) {
-      // لو ضغط تاني يشيله
-      setSelectedIds(selectedIds.filter((sid) => sid !== id));
+       setSelectedIds(selectedIds.filter((sid) => sid !== id));
     } else if (selectedIds.length < 6) {
-      // مسموح إضافة لو أقل من 6
-      setSelectedIds([...selectedIds, id]);
+       setSelectedIds([...selectedIds, id]);
     }
   };
 
@@ -37,7 +40,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({selectedIds, setSelected
       </div>
 
       <div className="grid grid-cols-[repeat(7,minmax(150px,1fr))] gap-6">
-        {items.map((item) => (
+        {items.map((item:any) => (
           <ProductCard
             key={item.id}
             {...item}

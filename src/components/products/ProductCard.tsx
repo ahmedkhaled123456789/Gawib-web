@@ -3,7 +3,7 @@ import React, { useState } from "react";
 interface ProductCardProps {
   id: string;
   image: string;
-  title: string;
+  name: string;
   gamesCount: number;
   selected: boolean;
   disabled: boolean;

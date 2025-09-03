@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
  import { Link, useLocation, useNavigate } from "react-router-dom";
  
 const GameBoard = () => {
@@ -5,9 +6,8 @@ const GameBoard = () => {
   const { game } = location.state || {};
 const navigate = useNavigate();
 
-  console.log("Data from API:", game);
-
-  const handleClick= (data) =>{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClick= (data: any) =>{
 
     navigate("/QuestionPage", { state: { question: data } });
   }
@@ -54,11 +54,11 @@ const navigate = useNavigate();
     ))}
   </div> */}
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-2">
-    {game.data.games.map((cat, index) => (
-      <div key={index} className={`flex items-center justify-center `}>
+    {game.data.games.map((cat: any) => (
+      <div key={cat.id} className={`flex items-center justify-center `}>
          <div className="flex flex-col gap-2 h-full">
   {Array(3).fill(null).map((_, idx) => {
-    const val = cat?.questions?.[idx + 3]; // ناخد العنصر من index 3 → 5
+    const val = cat?.questions?.[idx + 3]; 
     return (
       <button
         key={`left-${idx}`}

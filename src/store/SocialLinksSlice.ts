@@ -4,36 +4,42 @@ import { useGetDataToken } from "../hooks/useGetData";
 
  
 interface SocialLinksData {
- category_id: number;
- name: string;
- url: string;
- icon:string;
- }
+  id: null | undefined;
+  category_id: number;
+  name: string;
+  url: string;
+  icon: string;
+}
+
+interface SocialRespon {
+  data: SocialLinksData[]; // 👈 غالبًا بيجيلك Array من الـ API
+}
 
 interface SocialLinksState {
-  socialLink: SocialLinksData | null;
-  socialLinks :  SocialLinksData | null;
+  socialLink: SocialLinksData | null; // عنصر واحد
+  socialLinks: SocialLinksData[];     // 👈 list
   loading: boolean;
   error: string | null;
 }
 
 const initialState: SocialLinksState = {
   socialLink: null,
-  socialLinks:null,
+  socialLinks: [],
   loading: false,
   error: null,
 };
 
+
 // ================ get SocialLinksData ===============
 export const getSocialLink = createAsyncThunk<
-  SocialLinksData,
+  SocialRespon,
   { id: string }, 
   { rejectValue: string }
 >(
   "socialLinks/getSocialLink",
   async ({ id }, thunkAPI) => {
     try {
-      const res = await useGetDataToken<SocialLinksData>(`social-links/${id}`);
+      const res = await useGetDataToken<SocialRespon>(`social-links/${id}`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -45,14 +51,14 @@ export const getSocialLink = createAsyncThunk<
 
 // ================ getSocialLinks ===============
 export const getSocialLinks = createAsyncThunk<
-  SocialLinksData,
+  SocialRespon,
   void, 
   { rejectValue: string }
 >(
   "socialLinks/getSocialLinks",
   async (_, thunkAPI) => {
     try {
-      const res = await useGetDataToken<SocialLinksData>(`social-links`);
+      const res = await useGetDataToken<SocialRespon>(`social-links`);
       return res;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -68,14 +74,14 @@ const SocialLinksSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // getsocialLinks
-     .addCase(getSocialLink.fulfilled, (state, action: PayloadAction<SocialLinksData>) => {
-        state.socialLinks = action.payload;
+     .addCase(getSocialLink.fulfilled, (state, action: PayloadAction<SocialRespon>) => {
+        state.socialLinks = action.payload.data;
         state.loading = false;
         state.error = null;
       })
       // getSocialLinks
-.addCase(getSocialLinks.fulfilled, (state, action: PayloadAction<SocialLinksData>) => {
-        state.socialLinks = action.payload;
+.addCase(getSocialLinks.fulfilled, (state, action: PayloadAction<SocialRespon>) => {
+        state.socialLinks = action.payload.data;
         state.loading = false;
         state.error = null;
       })       
