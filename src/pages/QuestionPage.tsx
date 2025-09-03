@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MoveLeft, MoveRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -7,7 +8,7 @@ const QuestionPage = () => {
     console.log(question)
 const navigate = useNavigate();
 
-     const handleClick= (data) =>{
+     const handleClick= (data: any) =>{
 
     navigate("/Awnser", { state: { answer: data } });
   }
