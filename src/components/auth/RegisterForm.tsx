@@ -1,5 +1,6 @@
-import 'react-phone-input-2/lib/style.css';
-import PhoneInput from 'react-phone-input-2';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 interface RegisterFormProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,36 +55,39 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         />
 
         {/* رقم الجوال */}
-        <PhoneInput
-          country={'eg'}
-          value={form.phone_number.replace('+', '')}
-          onChange={(value) =>
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setForm((prevForm: any) => ({
-              ...prevForm,
-              phone_number: `+${value}`,
-            }))
-          }
-          inputProps={{
-            dir: 'rtl',
-            name: 'phone_number',
-          }}
-          containerStyle={{ direction: 'rtl' }}
-          inputStyle={{
-            width: '100%',
-            textAlign: 'right',
-            borderRadius: '6px',
-            paddingRight: '50px',
-            padding: '20px 10px',
-          }}
-          buttonStyle={{
-            backgroundColor: 'transparent',
-            border: 'none',
-            position: 'absolute',
-            left: '0',
-            right: 'auto',
-          }}
-        />
+       <PhoneInput
+  country={"eg"}
+  value={form.phone_number.replace("+", "")}
+  onChange={(value: string) =>
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      phone_number: `+${value}`,  
+    }))
+  }
+  inputProps={{
+    dir: "rtl",
+    name: "phone_number",
+  }}
+  containerStyle={{
+    direction: "rtl",
+    width: "100%",
+    position: "relative",
+  }}
+  inputStyle={{
+    width: "100%",
+    textAlign: "right",
+    borderRadius: "6px",
+    paddingRight: "50px",
+    padding: "20px 10px",
+  }}
+  buttonStyle={{
+    backgroundColor: "transparent",
+    border: "none",
+    position: "absolute",
+    left: "0",
+    right: "auto",
+  }}
+/>
       </div>
 
       {/* كلمة المرور وتأكيدها */}

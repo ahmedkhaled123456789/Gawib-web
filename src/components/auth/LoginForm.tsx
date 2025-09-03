@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "react-router-dom";
-import 'react-phone-input-2/lib/style.css';
-import PhoneInput from 'react-phone-input-2';
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 interface LoginFormProps {
   loginMethod: "email" | "phone";
   setLoginMethod: (method: "email" | "phone") => void;
@@ -43,38 +44,40 @@ const LoginForm: React.FC<LoginFormProps> = ({ setForm,loginMethod, setLoginMeth
       {/* Form Fields */}
       <div className="space-y-4 w-full max-w-md mx-auto">
         {loginMethod === "phone" && (
-              <PhoneInput
-  country={'eg'}
-  value={form.phone_number?.replace('+', '') || ''}
-  onChange={(value: string) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setForm((prevForm: any) => ({
-      ...prevForm,
-      phone_number: `+${value}`,
-    }))
-  }
-  inputProps={{
-    dir: 'rtl',
-    name: 'phone_number', // optional but useful
-  }}
-  containerStyle={{ direction: 'rtl' }}
-  inputStyle={{
-    width: '100%',
-    textAlign: 'right',
-    borderRadius: '6px',
-    paddingRight: '50px',
-    padding: '20px 10px',
-  }}
-  buttonStyle={{
-    backgroundColor: 'transparent',
-    border: 'none',
-    position: 'absolute',
-    left: '0',
-    right: 'auto',
-  }}
-/>
-
-         )}
+  <PhoneInput
+    country={"eg"}
+    value={form.phone_number?.replace("+", "") || ""}
+    onChange={(value: string) =>
+      setForm((prevForm: any) => ({
+        ...prevForm,
+        phone_number: `+${value}`,
+      }))
+    }
+    inputProps={{
+      dir: "rtl",
+      name: "phone_number",
+    }}
+    containerStyle={{
+      direction: "rtl",
+      width: "100%",
+      position: "relative",
+    }}
+    inputStyle={{
+      width: "100%",
+      textAlign: "right",
+      borderRadius: "6px",
+      paddingRight: "50px",
+      padding: "20px 10px",
+    }}
+    buttonStyle={{
+      backgroundColor: "transparent",
+      border: "none",
+      position: "absolute",
+      left: "0",
+      right: "auto",
+    }}
+  />
+)}
 
         {loginMethod === "email" && (
           <input
