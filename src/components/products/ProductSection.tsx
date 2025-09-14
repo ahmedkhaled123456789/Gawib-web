@@ -18,13 +18,17 @@ interface ProductSectionProps {
   items: Item[];
 }
 
-const ProductSection = ({selectedIds, setSelectedIds, title,  items }: ProductSectionProps) => {
-
+const ProductSection = ({
+  selectedIds,
+  setSelectedIds,
+  title,
+  items,
+}: ProductSectionProps) => {
   const handleSelect = (id: string) => {
     if (selectedIds.includes(id)) {
-       setSelectedIds(selectedIds.filter((sid) => sid !== id));
+      setSelectedIds(selectedIds.filter((sid) => sid !== id));
     } else if (selectedIds.length < 6) {
-       setSelectedIds([...selectedIds, id]);
+      setSelectedIds([...selectedIds, id]);
     }
   };
 
@@ -40,20 +44,16 @@ const ProductSection = ({selectedIds, setSelectedIds, title,  items }: ProductSe
       </div>
 
       <div className="grid grid-cols-[repeat(7,minmax(150px,1fr))] gap-6">
-        {items.map((item:any) => (
+        {items.map((item: any) => (
           <ProductCard
             key={item.id}
             {...item}
             selected={selectedIds.includes(item.id)}
-            disabled={
-              selectedIds.length >= 6 && !selectedIds.includes(item.id)
-            }
+            disabled={selectedIds.length >= 6 && !selectedIds.includes(item.id)}
             onSelect={handleSelect}
           />
         ))}
       </div>
-
-     
     </div>
   );
 };

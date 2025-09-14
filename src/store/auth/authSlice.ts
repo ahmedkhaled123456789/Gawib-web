@@ -1,11 +1,14 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { insertData } from "../../utils/api";
 import { useGetData } from "../../hooks/useGetData";
 import { useInUpdateData } from "../../hooks/useUpdateData";
 
 interface UserData {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
   firstName: string;
   lastName: string;
@@ -16,13 +19,19 @@ interface UserData {
 }
 
 interface AuthState {
+  accessToken: string | null;
+  refreshToken: string | null;
+  expiresAt: string | null;
   user: UserData | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: AuthState = {
-  user: JSON.parse(localStorage.getItem("user") || "null"), // ✅ load from localStorage
+  accessToken: localStorage.getItem("accessToken"),
+  refreshToken: localStorage.getItem("refreshToken"),
+  expiresAt: localStorage.getItem("expiresAt"),
+  user: JSON.parse(localStorage.getItem("user") || "null"),
   loading: false,
   error: null,
 };
@@ -32,141 +41,223 @@ interface UpdateUserArgs {
   data: Partial<UserData>;
 }
 
-// ================ Login ===============
-export const loginUser = createAsyncThunk<UserData, Record<string, unknown>, { rejectValue: string }>(
-  "auth/loginUser",
-  async (data, thunkAPI) => {
-    try {
-      const res = await insertData<typeof data, UserData>("auth/user/login", data);
-      return res;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "Login failed");
-    }
+// ================= Login =================
+export const loginUser = createAsyncThunk<
+  UserData,
+  Record<string, unknown>,
+  { rejectValue: string }
+>("auth/loginUser", async (data, thunkAPI) => {
+  try {
+    const res = await insertData<typeof data, UserData>(
+      "auth/user/login",
+      data
+    );
+    return res;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    return thunkAPI.rejectWithValue(
+      err.response?.data.message || "Login failed"
+    );
   }
-);
+});
 
-// ================ Signup ===============
-export const signupUser = createAsyncThunk<UserData, Record<string, unknown>, { rejectValue: string }>(
-  "auth/signupUser",
-  async (data, thunkAPI) => {
-    try {
-      const res = await insertData<typeof data, UserData>("auth/user/register", data);
-      return res;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "Signup failed");
-    }
+// ================= Signup =================
+export const signupUser = createAsyncThunk<
+  UserData,
+  Record<string, unknown>,
+  { rejectValue: string }
+>("auth/signupUser", async (data, thunkAPI) => {
+  try {
+    const res = await insertData<typeof data, UserData>(
+      "auth/user/register",
+      data
+    );
+    return res;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    return thunkAPI.rejectWithValue(
+      err.response?.data.message || "Signup failed"
+    );
   }
-);
+});
 
-// ================ getUser ===============
-export const getUser = createAsyncThunk<UserData, { id: string }, { rejectValue: string }>(
-  "auth/getUser",
-  async ({ id }, thunkAPI) => {
-    try {
-      const res = await useGetData<UserData>(`manage/users/${id}`);
-      return res;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "getUser failed");
-    }
+// ================= getUser =================
+export const getUser = createAsyncThunk<
+  UserData,
+  { id: string },
+  { rejectValue: string }
+>("auth/getUser", async ({ id }, thunkAPI) => {
+  try {
+    const res = await useGetData<UserData>(`manage/users/${id}`);
+    return res;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    return thunkAPI.rejectWithValue(
+      err.response?.data.message || "getUser failed"
+    );
   }
-);
+});
 
-// ================ update User ===============
-export const updateUser = createAsyncThunk<UserData, UpdateUserArgs, { rejectValue: string }>(
-  "auth/updateUser",
-  async ({ id, data }, thunkAPI) => {
-    try {
-      const response = await useInUpdateData<UserData>(`manage/users/${id}`, data);
-      return response;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "فشل في تحديث المستخدم");
-    }
+// ================= update User =================
+export const updateUser = createAsyncThunk<
+  UserData,
+  UpdateUserArgs,
+  { rejectValue: string }
+>("auth/updateUser", async ({ id, data }, thunkAPI) => {
+  try {
+    const response = await useInUpdateData<UserData>(
+      `manage/users/${id}`,
+      data
+    );
+    return response;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    return thunkAPI.rejectWithValue(
+      err.response?.data.message || "فشل في تحديث المستخدم"
+    );
   }
-);
+});
 
-// ================ log out ===============
-export const logOut = createAsyncThunk<UserData, Record<string, unknown>, { rejectValue: string }>(
+// ================= Logout =================
+export const logOut = createAsyncThunk<void, void, { rejectValue: string }>(
   "auth/logout",
-  async (data, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const res = await insertData<typeof data, UserData>("auth/user/logout", data);
-      return res;
+      await insertData("auth/user/logout", {});
+      localStorage.clear();
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "Logout failed");
+      return thunkAPI.rejectWithValue(
+        err.response?.data.message || "Logout failed"
+      );
     }
   }
 );
 
-// ================ Slice ===============
+// ================= Slice =================
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Login Cases
-     .addCase(loginUser.fulfilled, (state, action: PayloadAction<UserData>) => {
-  state.user = action.payload;
-  state.loading = false;
-  state.error = null;
+      // Login
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        loginUser.fulfilled,
+        (state, action: PayloadAction<UserData>) => {
+          state.user = action.payload;
+          state.loading = false;
+          state.error = null;
 
-   const token = action.payload.data?.access?.token;
-  if (token) {
-    localStorage.setItem("token", token);
-  }
+          const access = action.payload.data?.access;
+          if (access?.token) {
+            state.accessToken = access.token;
+            state.expiresAt = access.expires_at;
+            localStorage.setItem("accessToken", access.token);
+            localStorage.setItem("expiresAt", access.expires_at);
+          }
 
-   const userInfo = action.payload.data?.authenticatable;
-  if (userInfo) {
-    localStorage.setItem("user", JSON.stringify(userInfo));
-  }
-})
+          const refresh = action.payload.data?.refresh;
+          if (refresh?.token) {
+            state.refreshToken = refresh.token;
+            localStorage.setItem("refreshToken", refresh.token);
+          }
 
+          const userInfo = action.payload.data?.authenticatable;
+          if (userInfo) {
+            localStorage.setItem("user", JSON.stringify(userInfo));
+          }
+        }
+      )
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "حدث خطأ في تسجيل الدخول";
+      })
 
-      // Signup Cases
-     .addCase(signupUser.fulfilled, (state, action: PayloadAction<UserData>) => {
-  state.user = action.payload;
-  state.loading = false;
-  state.error = null;
+      // Signup
+      .addCase(signupUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        signupUser.fulfilled,
+        (state, action: PayloadAction<UserData>) => {
+          state.user = action.payload;
+          state.loading = false;
+          state.error = null;
 
-  const token = action.payload.data?.access?.token;
-  const tokenType = action.payload.data?.access?.token_type;
-  if (token && tokenType) {
-    localStorage.setItem("token", `${tokenType} ${token}`);
-  }
+          const access = action.payload.data?.access;
+          if (access?.token) {
+            state.accessToken = access.token;
+            state.expiresAt = access.expires_at;
+            localStorage.setItem("accessToken", access.token);
+            localStorage.setItem("expiresAt", access.expires_at);
+          }
 
-  const userInfo = action.payload.data?.authenticatable;
-  if (userInfo) {
-    localStorage.setItem("user", JSON.stringify(userInfo));
-  }
-})
+          const refresh = action.payload.data?.refresh;
+          if (refresh?.token) {
+            state.refreshToken = refresh.token;
+            localStorage.setItem("refreshToken", refresh.token);
+          }
 
+          const userInfo = action.payload.data?.authenticatable;
+          if (userInfo) {
+            localStorage.setItem("user", JSON.stringify(userInfo));
+          }
+        }
+      )
+      .addCase(signupUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "حدث خطأ في إنشاء الحساب";
+      })
 
       // Get User
+      .addCase(getUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(getUser.fulfilled, (state, action: PayloadAction<UserData>) => {
         state.user = action.payload;
         state.loading = false;
         state.error = null;
       })
+      .addCase(getUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "فشل في جلب بيانات المستخدم";
+      })
 
       // Update User
-      .addCase(updateUser.fulfilled, (state, action: PayloadAction<UserData>) => {
-        state.user = action.payload;
+      .addCase(
+        updateUser.fulfilled,
+        (state, action: PayloadAction<UserData>) => {
+          state.user = action.payload;
+          state.loading = false;
+          state.error = null;
+          localStorage.setItem("user", JSON.stringify(action.payload));
+        }
+      )
+      .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = null;
-        localStorage.setItem("user", JSON.stringify(action.payload)); // ✅ update localStorage on user update
+        state.error = action.payload || "فشل في تحديث المستخدم";
       })
 
       // Logout
       .addCase(logOut.fulfilled, (state) => {
         state.user = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.expiresAt = null;
         state.loading = false;
         state.error = null;
-        localStorage.removeItem("user"); // ✅ clear from localStorage
+        localStorage.clear();
+      })
+      .addCase(logOut.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "فشل في تسجيل الخروج";
       });
   },
 });

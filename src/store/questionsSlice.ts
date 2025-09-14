@@ -1,24 +1,27 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { useGetDataToken } from "../utils/api";
 
- 
 interface QuestionData {
- key: string;
- value: string;
+  key: string;
+  value: string;
   type: string;
- }
+}
 
 interface QuestionState {
   question: QuestionData | null;
-  questions :  QuestionData | null;
+  questions: QuestionData | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: QuestionState = {
   question: null,
-  questions:null,
+  questions: null,
   loading: false,
   error: null,
 };
@@ -26,39 +29,36 @@ const initialState: QuestionState = {
 // ================ getQuestion ===============
 export const getQuestion = createAsyncThunk<
   QuestionData,
-  { id: string }, 
+  { id: string },
   { rejectValue: string }
->(
-  "question/getQuestion",
-  async ({ id }, thunkAPI) => {
-    try {
-      const res = await useGetDataToken<QuestionData>(`show/question/${id}`);
-      return res;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "getQuestions failed");
-    }
+>("question/getQuestion", async ({ id }, thunkAPI) => {
+  try {
+    const res = await useGetDataToken<QuestionData>(`show/question/${id}`);
+    return res;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    return thunkAPI.rejectWithValue(
+      err.response?.data.message || "getQuestions failed"
+    );
   }
-);
-
+});
 
 // ================ getQuestions ===============
 export const getQuestions = createAsyncThunk<
   QuestionData,
-   void,
+  void,
   { rejectValue: string }
->(
-  "question/getQuestions",
-  async (_, thunkAPI) => {
-    try {
-      const res = await useGetDataToken<QuestionData>(`show/questions`);
-      return res;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "getQuestions failed");
-    }
+>("question/getQuestions", async (_, thunkAPI) => {
+  try {
+    const res = await useGetDataToken<QuestionData>(`show/questions`);
+    return res;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    return thunkAPI.rejectWithValue(
+      err.response?.data.message || "getQuestions failed"
+    );
   }
-);
+});
 // ================ Slice ===============
 const settingSlice = createSlice({
   name: "question",
@@ -67,17 +67,23 @@ const settingSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // getQuestion
-     .addCase(getQuestion.fulfilled, (state, action: PayloadAction<QuestionData>) => {
-        state.question = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
+      .addCase(
+        getQuestion.fulfilled,
+        (state, action: PayloadAction<QuestionData>) => {
+          state.question = action.payload;
+          state.loading = false;
+          state.error = null;
+        }
+      )
       // getQuestions
-.addCase(getQuestions.fulfilled, (state, action: PayloadAction<QuestionData>) => {
-        state.questions = action.payload;
-        state.loading = false;
-        state.error = null;
-      })       
+      .addCase(
+        getQuestions.fulfilled,
+        (state, action: PayloadAction<QuestionData>) => {
+          state.questions = action.payload;
+          state.loading = false;
+          state.error = null;
+        }
+      );
   },
 });
 

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../store";
 import { createGame } from "../store/preGameSlice";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "sonner";
 interface GameSetupProps {
   selectedIds: string[];
 }
@@ -16,37 +16,59 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
   const [team2, setTeam2] = useState("");
   const [score1, setScore1] = useState(1);
   const [score2, setScore2] = useState(1);
-const navigate = useNavigate();
-  const handleIncrement = (setter: React.Dispatch<React.SetStateAction<number>>) => {
+  const navigate = useNavigate();
+  const handleIncrement = (
+    setter: React.Dispatch<React.SetStateAction<number>>
+  ) => {
     setter((prev) => (prev < 6 ? prev + 1 : 6));
   };
 
-  const handleDecrement = (setter: React.Dispatch<React.SetStateAction<number>>) => {
+  const handleDecrement = (
+    setter: React.Dispatch<React.SetStateAction<number>>
+  ) => {
     setter((prev) => (prev > 1 ? prev - 1 : 1));
   };
 
- const handleSave = () => {
-  const newGame = {
-    user_id: "1",
-    ids: selectedIds,
-    game_name: gameName,
-    first_team_name: team1,
-    second_team_name: team2,
-    first_team_players_count: String(score1),
-    second_team_players_count: String(score2),
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+
+  const handleSave = () => {
+    // ✅ Frontend validation
+    if (!gameName.trim() || !team1.trim() || !team2.trim()) {
+      const errors: string[] = [];
+      if (!gameName.trim()) errors.push("⚠️ اسم اللعبة مطلوب");
+      if (!team1.trim()) errors.push("⚠️ اسم الفريق الأول مطلوب");
+      if (!team2.trim()) errors.push("⚠️ اسم الفريق الثاني مطلوب");
+
+      toast.error(errors.join(" • "));
+      return;
+    }
+
+    const newGame = {
+      user_id: user?.id,
+      ids: selectedIds,
+      game_name: gameName,
+      first_team_name: team1,
+      second_team_name: team2,
+      first_team_players_count: String(score1),
+      second_team_players_count: String(score2),
+    };
+
+    dispatch(createGame(newGame))
+      .unwrap()
+      .then((res: any) => {
+        console.log("Game created successfully ✅", res);
+        toast.success(res?.message);
+        navigate("/GameBoard", { state: { game: res } });
+      })
+      .catch((err: any) => {
+        // جلب رسالة الخطأ من backend لو موجودة، أو استخدام رسالة Axios
+        const backendMessage =
+          err?.response?.data?.message || err?.message || "حدث خطأ ما";
+        toast.error(backendMessage); // عرض الخطأ للمستخدم
+        console.log("Error creating game ❌", err);
+      });
   };
-
-  dispatch(createGame(newGame))
-    .unwrap()
-    .then((res) => {
-      console.log("Game created successfully ✅", res);
-       navigate("/GameBoard", { state: { game: res } });
-    })
-    .catch((err) => {
-      console.error("Error creating game ❌", err);
-    });
-};
-
 
   return (
     <div className="flex flex-col items-center justify-center text-black min-h-screen gap-4">
@@ -79,7 +101,9 @@ const navigate = useNavigate();
         {[score1, score2].map((score, index) => (
           <div key={index} className="flex justify-center items-center w-1/2">
             <button
-              onClick={() => handleDecrement(index === 0 ? setScore1 : setScore2)}
+              onClick={() =>
+                handleDecrement(index === 0 ? setScore1 : setScore2)
+              }
               className="bg-[#FFC629] w-[30%] py-2 font-bold text-[#085E9C] text-2xl"
             >
               -
@@ -91,7 +115,9 @@ const navigate = useNavigate();
               readOnly
             />
             <button
-              onClick={() => handleIncrement(index === 0 ? setScore1 : setScore2)}
+              onClick={() =>
+                handleIncrement(index === 0 ? setScore1 : setScore2)
+              }
               className="bg-[#FFC629] w-[30%] text-[#085E9C] font-bold py-2 text-2xl"
             >
               +
