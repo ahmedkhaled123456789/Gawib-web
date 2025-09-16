@@ -28,29 +28,33 @@ const AwnserPage = () => {
 
   const handleSelectTeam = (team: "first_team" | "second_team" | "none") => {
     if (loading) return;
+    if (!game || !answer) {
+      toast.error("لا توجد بيانات اللعبة أو السؤال");
+      return;
+    }
 
     const questionPoints = answer?.points || 0;
-    let firstTeamScore = game?.data?.details?.first_team_score || 0;
-    let secondTeamScore = game?.data?.details?.second_team_score || 0;
-    let nextTeam = game?.data?.details?.current_team || 1;
+    let firstTeamScore = game.data.details.first_team_score || 0;
+    let secondTeamScore = game.data.details.second_team_score || 0;
+    let nextTeam = game.data.details.current_team || 1;
 
     if (team === "first_team") {
-      let pointsToAdd = first_team_double_points
+      firstTeamScore += first_team_double_points
         ? questionPoints * 2
         : questionPoints;
-      firstTeamScore += pointsToAdd;
       nextTeam = 2;
     } else if (team === "second_team") {
-      let pointsToAdd = second_team_double_points
+      secondTeamScore += second_team_double_points
         ? questionPoints * 2
         : questionPoints;
-      secondTeamScore += pointsToAdd;
       nextTeam = 1;
+    } else if (team === "none") {
+      nextTeam = nextTeam === 1 ? 2 : 1; // تغيّر الفريق
     }
 
     const selectedData = {
-      id: answer?.id,
-      question_id: answer?.question?.id,
+      id: game.data.details.id,
+      question_id: answer.id,
       who_answered: team === "first_team" ? 1 : team === "second_team" ? 2 : 0,
       first_team_score: firstTeamScore,
       second_team_score: secondTeamScore,
@@ -72,9 +76,9 @@ const AwnserPage = () => {
             ...game.data,
             details: {
               ...game.data.details,
-              current_team: res.current_team || nextTeam,
-              first_team_score: res.first_team_score || firstTeamScore,
-              second_team_score: res.second_team_score || secondTeamScore,
+              current_team: res.current_team ?? nextTeam,
+              first_team_score: res.first_team_score ?? firstTeamScore,
+              second_team_score: res.second_team_score ?? secondTeamScore,
               first_team_double_points:
                 res.first_team_double_points ?? first_team_double_points,
               second_team_double_points:
@@ -82,10 +86,11 @@ const AwnserPage = () => {
               first_team_call: res.first_team_call ?? first_team_call,
               second_team_call: res.second_team_call ?? second_team_call,
             },
+            games: res.games || game.data.games,
           },
         };
 
-        navigate("/GameBoard", { state: { game: updatedGame } });
+        navigate("/GameBoard", { state: { updatedGame: res } });
       })
       .catch((err) => {
         toast.error(err || "حدث خطأ");

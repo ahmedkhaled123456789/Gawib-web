@@ -43,7 +43,10 @@ const HomePage = () => {
         </div>
         <GameSetup selectedIds={selectedIds} />
         {/* Footer */}
-        <Footer />
+        <Footer
+          selectedIds={selectedIds}
+          allGames={categories.flatMap((cat) => cat.games ?? [])}
+        />
       </div>
     </>
   );

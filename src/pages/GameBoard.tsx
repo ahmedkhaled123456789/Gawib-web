@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useGetDataToken } from "../hooks/useGetData";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import {
@@ -11,7 +9,11 @@ import {
 
 const GameBoard = () => {
   const location = useLocation();
-  const { game } = location.state || {};
+  const { game: gameFromSetup, updatedGame } = location.state || {};
+  const game = updatedGame || gameFromSetup;
+
+  console.log("GameBoard location.state:", game);
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -19,59 +21,7 @@ const GameBoard = () => {
     (state: RootState) => state.gameFeatures
   );
 
-  const [gameData, setGameData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-
-  // جلب البيانات من الـ API
-  useEffect(() => {
-    const fetchGameData = async () => {
-      if (!game?.data?.details?.id) return;
-      setLoading(true);
-      try {
-        const updatedGame = await useGetDataToken(
-          `show/in-game/${game.data.details.id}`
-        );
-        setGameData(updatedGame);
-      } catch (error) {
-        console.error("Error fetching updated game data:", error);
-        setGameData(game);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (game && game !== gameData) {
-      setGameData(game);
-    } else {
-      fetchGameData();
-    }
-  }, [game?.data?.details?.id, game]);
-
-  // تحديث عند الرجوع للصفحة
-  useEffect(() => {
-    const fetchUpdatedData = async () => {
-      if (!game?.data?.details?.id) return;
-      try {
-        const updatedGame = await useGetDataToken(
-          `show/in-game/${game.data.details.id}`
-        );
-        setGameData(updatedGame);
-      } catch (error) {
-        console.error("Error fetching updated game data:", error);
-      }
-    };
-
-    const handleFocus = () => {
-      fetchUpdatedData();
-    };
-
-    window.addEventListener("focus", handleFocus);
-    return () => window.removeEventListener("focus", handleFocus);
-  }, [game?.data?.details?.id]);
-
-  const currentGameData = gameData || game;
-
-  if (!currentGameData || !currentGameData.data) {
+  if (!game || !game.data) {
     return (
       <div className="flex justify-center items-center min-h-screen text-red-500">
         لا توجد بيانات للعبة. الرجاء العودة للصفحة الرئيسية.
@@ -79,19 +29,12 @@ const GameBoard = () => {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-[#085E9C] text-xl">جاري تحميل البيانات...</div>
-      </div>
-    );
-  }
-
   // handle question click
   const handleClick = (data: any) => {
+    // لو متجاوب قبل كده، ميسمحش بالفتح
     if (!data || data.is_answered) return;
     navigate("/QuestionPage", {
-      state: { question: data, game: currentGameData },
+      state: { question: data, game: game },
     });
   };
 
@@ -99,7 +42,7 @@ const GameBoard = () => {
     <div className="flex flex-col justify-between h-full p-8 lg:p-12 sm:p-4 mb-6">
       {/* Grid of Categories */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-2">
-        {currentGameData.data.games.map((cat: any) => (
+        {game.data.games.map((cat: any) => (
           <div key={cat.id} className="flex items-center justify-center">
             {/* Left buttons */}
             <div className="flex flex-col gap-2 h-full">
@@ -113,13 +56,13 @@ const GameBoard = () => {
                       className={`w-16 sm:w-20 h-16 rounded rounded-br-xl rounded-tl-xl text-xs sm:text-sm font-bold
                         ${
                           val?.is_answered
-                            ? "bg-gray-400 text-white cursor-not-allowed"
+                            ? "bg-gray-200 text-[#085E9C] cursor-not-allowed text-2xlfont-bold "
                             : "bg-[#085E9C] text-white hover:bg-blue-700"
                         }`}
                       onClick={() => handleClick(val)}
                       disabled={val?.is_answered}
                     >
-                      {val?.is_answered ? "✓" : val?.points ?? "-"}
+                      {val?.is_answered ? val?.points : val?.points ?? "-"}
                     </button>
                   );
                 })}
@@ -149,13 +92,13 @@ const GameBoard = () => {
                       className={`w-16 sm:w-20 h-16 rounded rounded-bl-xl rounded-tr-xl text-xs sm:text-sm font-bold
                         ${
                           val?.is_answered
-                            ? "bg-gray-400 text-white cursor-not-allowed"
+                            ? "bg-gray-200 text-[#085E9C] cursor-not-allowed text-2xlfont-bold "
                             : "bg-[#085E9C] text-white hover:bg-blue-700"
                         }`}
                       onClick={() => handleClick(val)}
                       disabled={val?.is_answered}
                     >
-                      {val?.is_answered ? "✓" : val?.points ?? "-"}
+                      {val?.is_answered ? val?.points : val?.points ?? "-"}
                     </button>
                   );
                 })}
@@ -167,9 +110,9 @@ const GameBoard = () => {
       {/* Players Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center border-t-2 mt-6 pt-4 border-[#085E9C] gap-4 sm:gap-0">
         <PlayerScore
-          name={currentGameData.data.details.first_team_name}
-          score={currentGameData.data.details.first_team_score}
-          active={currentGameData.data.details.current_team === 1}
+          name={game.data.details.first_team_name}
+          score={game.data.details.first_team_score}
+          active={game.data.details.current_team === 1}
           isDouble={first_team_double_points === 1}
           onToggleDouble={() =>
             dispatch(
@@ -185,9 +128,9 @@ const GameBoard = () => {
           />
         </Link>
         <PlayerScore
-          name={currentGameData.data.details.second_team_name}
-          score={currentGameData.data.details.second_team_score}
-          active={currentGameData.data.details.current_team === 2}
+          name={game.data.details.second_team_name}
+          score={game.data.details.second_team_score}
+          active={game.data.details.current_team === 2}
           isDouble={second_team_double_points === 1}
           onToggleDouble={() =>
             dispatch(

@@ -43,7 +43,7 @@ export const updateAnswer = createAsyncThunk<
   try {
     const response = await useInUpdateData<any>(
       `show/in-game/${data.id}`,
-      data
+      {...data}
     );
     // هنا نقدر نرجع response كامل
     return response;

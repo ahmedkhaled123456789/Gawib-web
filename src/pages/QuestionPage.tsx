@@ -198,12 +198,25 @@ const QuestionPage = () => {
             </div>
 
             {/* Answer button */}
-            <div
-              className="bg-[#085E9C] text-center font-bold text-lg md:text-2xl text-white rounded-tr px-4 py-2 cursor-pointer"
-              onClick={() => handleClick(question)}
-            >
-              الإجابة
-            </div>
+            {/* Answer button أو زرار الرجوع */}
+            {question?.question?.text ||
+            question?.question?.image ||
+            question?.question?.audio ||
+            question?.question?.video ? (
+              <div
+                className="bg-[#085E9C] text-center font-bold text-lg md:text-2xl text-white rounded-tr px-4 py-2 cursor-pointer"
+                onClick={() => handleClick(question)}
+              >
+                الإجابة
+              </div>
+            ) : (
+              <div
+                className="bg-gray-500 text-center font-bold text-lg md:text-2xl text-white rounded-tr px-4 py-2 cursor-pointer"
+                onClick={() => navigate(-1)} // ترجع للصفحة السابقة
+              >
+                الرجوع
+              </div>
+            )}
           </div>
         </div>
       </div>
