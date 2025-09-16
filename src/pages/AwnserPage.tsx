@@ -70,25 +70,25 @@ const AwnserPage = () => {
       .then((res) => {
         toast.success(res.message || "تم تحديث الإجابة ✅");
 
-        const updatedGame = {
-          ...game,
-          data: {
-            ...game.data,
-            details: {
-              ...game.data.details,
-              current_team: res.current_team ?? nextTeam,
-              first_team_score: res.first_team_score ?? firstTeamScore,
-              second_team_score: res.second_team_score ?? secondTeamScore,
-              first_team_double_points:
-                res.first_team_double_points ?? first_team_double_points,
-              second_team_double_points:
-                res.second_team_double_points ?? second_team_double_points,
-              first_team_call: res.first_team_call ?? first_team_call,
-              second_team_call: res.second_team_call ?? second_team_call,
-            },
-            games: res.games || game.data.games,
-          },
-        };
+        // const updatedGame = {
+        //   ...game,
+        //   data: {
+        //     ...game.data,
+        //     details: {
+        //       ...game.data.details,
+        //       current_team: res.current_team ?? nextTeam,
+        //       first_team_score: res.first_team_score ?? firstTeamScore,
+        //       second_team_score: res.second_team_score ?? secondTeamScore,
+        //       first_team_double_points:
+        //         res.first_team_double_points ?? first_team_double_points,
+        //       second_team_double_points:
+        //         res.second_team_double_points ?? second_team_double_points,
+        //       first_team_call: res.first_team_call ?? first_team_call,
+        //       second_team_call: res.second_team_call ?? second_team_call,
+        //     },
+        //     games: res.games || game.data.games,
+        //   },
+        // };
 
         navigate("/GameBoard", { state: { updatedGame: res } });
       })

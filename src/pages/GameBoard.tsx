@@ -45,7 +45,7 @@ const GameBoard = () => {
         {game.data.games.map((cat: any) => (
           <div key={cat.id} className="flex items-center justify-center">
             {/* Left buttons */}
-            <div className="flex flex-col gap-2 h-full">
+            <div className="flex  flex-col-reverse gap-2 h-full">
               {Array(3)
                 .fill(null)
                 .map((_, idx) => {
@@ -89,7 +89,7 @@ const GameBoard = () => {
                   return (
                     <button
                       key={`right-${idx}`}
-                      className={`w-16 sm:w-20 h-16 rounded rounded-bl-xl rounded-tr-xl text-xs sm:text-sm font-bold
+                      className={`w-16 sm:w-20 h-16  rounded rounded-bl-xl rounded-tr-xl text-xs sm:text-sm font-bold
                         ${
                           val?.is_answered
                             ? "bg-gray-200 text-[#085E9C] cursor-not-allowed text-2xlfont-bold "

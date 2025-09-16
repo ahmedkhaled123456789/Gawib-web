@@ -1,11 +1,11 @@
 interface FooterProps {
-  selectedIds: string[];
+  selectedIds?: string[];
   allGames?: { id: string; name: string; image: string }[];
 }
 
 const Footer: React.FC<FooterProps> = ({ selectedIds, allGames }) => {
   const selectedGames =
-    allGames?.filter((game) => selectedIds.includes(game.id)) || [];
+    allGames?.filter((game) => selectedIds?.includes(game.id)) || [];
 
   return (
     <footer className="fixed bottom-0 left-0 w-full bg-[#085E9C] flex justify-between items-center px-6 py-2 text-white">
