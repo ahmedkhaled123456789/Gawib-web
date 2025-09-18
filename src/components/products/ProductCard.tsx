@@ -6,6 +6,7 @@ interface ProductCardProps {
   name: string;
   gamesCount: number;
   selected: boolean;
+  game_count?: number;
   disabled: boolean;
   onSelect: (id: string) => void;
 }
@@ -14,6 +15,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   id,
   image,
   name,
+  game_count,
   selected,
   disabled,
   onSelect,
@@ -31,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <div className="bg-white border border-[#085E9C] rounded-xl shadow-md overflow-hidden pb-4 text-center">
         {/* Top tab */}
         <div className="absolute -top-5 left-4 bg-[#F6F1EF] border border-[#085E9C] rounded-tr-3xl rounded-bl-3xl px-10 py-2 text-[#085E9C] font-bold text-sm shadow">
-          120 لعبة
+          {game_count ?? 0} لعبة
         </div>
 
         {/* Selected Badge */}

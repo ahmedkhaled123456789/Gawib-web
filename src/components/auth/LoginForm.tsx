@@ -71,6 +71,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <PhoneInput
               country={"eg"}
               value={form.phone_number?.replace("+", "") || ""}
+               enableSearch 
               onChange={(value: string) =>
                 setForm((prevForm) => ({
                   ...prevForm,

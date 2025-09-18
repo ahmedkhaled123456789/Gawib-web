@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { logOut } from "../store/auth/authSlice";
+import { User2 } from "lucide-react";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,7 @@ const Header = () => {
 
   const { user } = useSelector((state: RootState) => state.auth);
 
+  console.log(user);
   const handleLogout = () => {
     dispatch(logOut());
   };
@@ -21,9 +23,17 @@ const Header = () => {
         {/* Right: تسجيل الدخول / الخروج */}
         <nav className="hidden text-2xl md:flex items-center text-black font-medium gap-6">
           {user ? (
-            <button onClick={handleLogout} className="cursor-pointer">
-              تسجيل الخروج
-            </button>
+            <div className="flex items-center gap-4">
+              <Link to="/profile" className="flex items-center gap-2 text-lg">
+                <span>
+                  {user.first_name ? `${user.first_name} ` : user.email}
+                </span>
+                <User2 size={24} className="cursor-pointer" />
+              </Link>
+              <button onClick={handleLogout} className="cursor-pointer">
+                تسجيل الخروج
+              </button>
+            </div>
           ) : (
             <Link to="/auth">إنشاء حساب | دخول</Link>
           )}
@@ -56,14 +66,26 @@ const Header = () => {
             شراء | إهداء لعبة
           </Link>
           {user ? (
-            <button
-              onClick={() => {
-                handleLogout();
-                setIsOpen(false);
-              }}
-            >
-              تسجيل الخروج
-            </button>
+            <div className="flex flex-col items-center gap-4">
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+              >
+                تسجيل الخروج
+              </button>
+              <Link
+                to="/profile"
+                className="flex items-center justify-center gap-2 text-lg"
+                onClick={() => setIsOpen(false)}
+              >
+                <span>
+                  {user.first_name ? `${user.first_name} ` : user.email}
+                </span>
+                <User2 size={24} className="cursor-pointer" />
+              </Link>
+            </div>
           ) : (
             <Link to="/auth" onClick={() => setIsOpen(false)}>
               إنشاء حساب | دخول

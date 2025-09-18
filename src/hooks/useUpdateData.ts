@@ -17,7 +17,7 @@ import baseUrl from "../Api/baseURL";
   config?: AxiosRequestConfig
 ): Promise<TResponse> => {
   try {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
 
     const finalConfig: AxiosRequestConfig = {
       ...config,

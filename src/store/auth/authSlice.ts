@@ -5,17 +5,18 @@ import {
 } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { insertData } from "../../utils/api";
-import { useGetData } from "../../hooks/useGetData";
+import { useGetDataToken } from "../../hooks/useGetData";
 import { useInUpdateData } from "../../hooks/useUpdateData";
 
 interface UserData {
   data?: any;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  phone: string;
+  phone_number: string;
   password: string;
-  confirmPassword: string;
+  password_confirmation: string;
+  current_password: string;
 }
 
 interface AuthState {
@@ -35,11 +36,14 @@ const initialState: AuthState = {
   loading: false,
   error: null,
 };
-
-interface UpdateUserArgs {
-  id: string;
-  data: Partial<UserData>;
+interface UpdateUserResponse {
+  message: string;
+  data: UserData;
 }
+
+// interface UpdateUserArgs {
+//   data: Partial<UserData>;
+// }
 
 // ================= Login =================
 export const loginUser = createAsyncThunk<
@@ -84,11 +88,11 @@ export const signupUser = createAsyncThunk<
 // ================= getUser =================
 export const getUser = createAsyncThunk<
   UserData,
-  { id: string },
+  void,
   { rejectValue: string }
->("auth/getUser", async ({ id }, thunkAPI) => {
+>("auth/getUser", async (_, thunkAPI) => {
   try {
-    const res = await useGetData<UserData>(`manage/users/${id}`);
+    const res = await useGetDataToken<UserData>("user/my-profile");
     return res;
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
@@ -97,16 +101,15 @@ export const getUser = createAsyncThunk<
     );
   }
 });
-
-// ================= update User =================
+// ================= updateUser =================
 export const updateUser = createAsyncThunk<
-  UserData,
-  UpdateUserArgs,
+  UpdateUserResponse,
+  Partial<UserData>,
   { rejectValue: string }
->("auth/updateUser", async ({ id, data }, thunkAPI) => {
+>("auth/updateUser", async (data, thunkAPI) => {
   try {
-    const response = await useInUpdateData<UserData>(
-      `manage/users/${id}`,
+    const response = await useInUpdateData<UpdateUserResponse>(
+      "user/update-profile",
       data
     );
     return response;
@@ -227,17 +230,17 @@ const authSlice = createSlice({
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "فشل في جلب بيانات المستخدم";
+        state.error = action.payload || "Failed to fetch user";
       })
 
       // Update User
+
       .addCase(
         updateUser.fulfilled,
-        (state, action: PayloadAction<UserData>) => {
-          state.user = action.payload;
+        (state, action: PayloadAction<UpdateUserResponse>) => {
+          state.user = action.payload.data;
           state.loading = false;
-          state.error = null;
-          localStorage.setItem("user", JSON.stringify(action.payload));
+          localStorage.setItem("user", JSON.stringify(action.payload.data));
         }
       )
       .addCase(updateUser.rejected, (state, action) => {

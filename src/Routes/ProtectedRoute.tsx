@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
 
   // لو مفيش توكن → يرجعه على صفحة اللوجين
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   // لو فيه توكن → يعرض الصفحة

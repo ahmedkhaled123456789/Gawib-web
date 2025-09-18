@@ -24,7 +24,7 @@ const useGetData = async <T>(
 };
 
 const useGetDataToken = async <T,>(url: string): Promise<T> => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   const config: AxiosRequestConfig = {
     headers: { Authorization: `Bearer ${token}` },
   };

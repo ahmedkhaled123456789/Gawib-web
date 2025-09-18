@@ -6,19 +6,23 @@ import ProductSection from "../components/products/ProductSection";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { useEffect, useState } from "react";
-import { getCategories } from "../store/categoriesSlice";
-import { getGamePackages } from "../store/GamePackagesSlice";
+import { getCategories, getCategoriesAuth } from "../store/categoriesSlice";
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { categories, loading, error } = useSelector(
     (state: RootState) => state.category
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
   useEffect(() => {
-    dispatch(getCategories());
-    dispatch(getGamePackages());
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      dispatch(getCategoriesAuth());
+    } else {
+      dispatch(getCategories());
+    }
+    // dispatch(getGamePackages());
   }, [dispatch]);
+
   return (
     <>
       {/* Header with Menu Icon */}

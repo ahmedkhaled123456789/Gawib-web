@@ -7,7 +7,7 @@ interface Item {
   name: string;
   category_id: string;
   description: string;
-  game_count: number;
+  game_count?: number;
   image: string;
   is_free: boolean;
 }
@@ -43,7 +43,7 @@ const ProductSection = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-[repeat(7,minmax(150px,1fr))] gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 sm:gap-6">
         {items.map((item: any) => (
           <ProductCard
             key={item.id}

@@ -10,7 +10,7 @@ const useInsertData = async <T>(
     // Add Authorization token to the config headers
     const defaultConfig: AxiosRequestConfig = {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         ...config?.headers, // Merge any additional headers from the config
       },
     };

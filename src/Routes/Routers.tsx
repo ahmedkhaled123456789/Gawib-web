@@ -16,6 +16,7 @@ import ContactUs from "../pages/ContactUs";
 import SocialMedia from "../pages/SocialMedia";
 import DealPage from "../pages/DealPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 const Routers = () => {
   const token = localStorage.getItem("accessToken");
@@ -28,18 +29,24 @@ const Routers = () => {
         path="auth"
         element={token ? <Navigate to="/home" /> : <AuthPage />}
       />
-      <Route path="profile" element={<ProfilePage />} />
-      <Route path="forgetPassword" element={<ForgetPassword />} />
-      <Route path="resetPassword" element={<ResetPasswordPage />} />
-      <Route path="game" element={<GamePurchasePage />} />
-      <Route path="payment" element={<PaymentPage />} />
+
+      {/* Protected Route  */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="forgetPassword" element={<ForgetPassword />} />
+        <Route path="resetPassword" element={<ResetPasswordPage />} />
+
+        <Route path="game" element={<GamePurchasePage />} />
+        <Route path="payment" element={<PaymentPage />} />
+      </Route>
+
       <Route path="GameBoard" element={<GameBoard />} />
       <Route path="QuestionPage" element={<QuestionPage />} />
       <Route path="Awnser" element={<AwnserPage />} />
       <Route path="Congratulations" element={<Congratulations />} />
       <Route path="Play" element={<PlayPage />} />
       <Route path="about" element={<AboutJaweb />} />
-      <Route path="rules" element={<RulesPage />} />
+      <Route path="rules" element={<RulesPage />} />y
       <Route path="ContactUs" element={<ContactUs />} />
       <Route path="SocialMedia" element={<SocialMedia />} />
       <Route path="Deal" element={<DealPage />} />

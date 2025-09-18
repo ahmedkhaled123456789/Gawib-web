@@ -11,6 +11,9 @@ import preGameReducer from "./preGameSlice";
 import settingReducer from "./settingSlice";
 import answerReducer from "./answerSlice";
 import gameFeaturesSlice from "./gameFeaturesSlice";
+import reportSlice from "./ReportSlice";
+import paymentSlice from "./paymentSlice";
+import freePaymentSlice from "./freePaymentSlic";
 
 const store = configureStore({
   reducer: {
@@ -26,6 +29,9 @@ const store = configureStore({
     settings: settingReducer,
     answer: answerReducer,
     gameFeatures: gameFeaturesSlice,
+    report: reportSlice,
+    payment: paymentSlice,
+    freePaymentSlice:freePaymentSlice ,
   },
 });
 

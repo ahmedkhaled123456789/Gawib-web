@@ -18,3 +18,28 @@ body {
 .filter-white {
   filter: brightness(0) saturate(100%) invert(100%);
 }
+
+/* Scrollbar مخصص */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px; /* صغرنا الحجم */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #064d7a; /* لون الخلفية */
+  border-radius: 9999px; /* مدور */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #ffffff; /* لون الـ thumb (المؤشر) */
+  border-radius: 9999px; /* مدور */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #cccccc; /* لون أفتح عند الـ hover */
+}
+
+/* للـ Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff #064d7a;
+}

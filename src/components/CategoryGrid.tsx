@@ -10,6 +10,7 @@ const CategoryGrid = ({ categories, loading, error }: HeroSectionProps) => {
   if (loading) return <p className="text-center">جاري التحميل...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
+  console.log("Rendering CategoryGrid with categories:", categories);
   const handleCategoryClick = (id: string) => {
     const section = document.getElementById(`category-${id}`);
     if (section) {
@@ -18,7 +19,7 @@ const CategoryGrid = ({ categories, loading, error }: HeroSectionProps) => {
   };
 
   return (
-    <div className="grid grid-cols-3 md:grid-cols-7 gap-4 mt-12">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mt-12">
       {categories.length > 0 ? (
         categories.map((cat) => (
           <div

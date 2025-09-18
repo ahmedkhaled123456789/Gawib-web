@@ -10,12 +10,15 @@ import {
   setSecondTeamDoublePoints,
 } from "../store/gameFeaturesSlice";
 import { toast } from "sonner";
+import ReportModal from "../components/ReportModal";
+import { useState } from "react";
 
 const AwnserPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { answer, game } = location.state || {};
   const dispatch = useDispatch<AppDispatch>();
+  const [isReportOpen, setIsReportOpen] = useState<boolean>(false);
 
   // Redux states
   const { loading } = useSelector((state: RootState) => state.answer);
@@ -210,7 +213,10 @@ const AwnserPage = () => {
 
         {/* Left */}
         <div className="flex flex-col justify-between w-full md:w-2/12 h-full">
-          <div className="text-center cursor-pointer font-bold text-xl bg-[#085E9C] text-white rounded-br px-4 py-2">
+          <div
+            className="text-center cursor-pointer font-bold text-xl bg-[#085E9C] text-white rounded-br px-4 py-2"
+            onClick={() => setIsReportOpen(true)}
+          >
             أبلاغ
           </div>
 
@@ -254,6 +260,12 @@ const AwnserPage = () => {
           </div>
         </div>
       </div>
+
+      <ReportModal
+        isOpen={isReportOpen}
+        onClose={() => setIsReportOpen(false)}
+        question_id={answer?.id}
+      />
     </div>
   );
 };

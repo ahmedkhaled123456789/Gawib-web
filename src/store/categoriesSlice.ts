@@ -6,23 +6,26 @@ import {
 import { AxiosError } from "axios";
 import { useGetDataToken } from "../utils/api";
 
+// ================= Interfaces =================
 interface Item {
   id: string;
   name: string;
   category_id: string;
   description: string;
-  game_count: number;
+  game_count?: number; // ✅ optional لأن guest ما بيرجعهاش
   image: string;
   is_free: boolean;
 }
+
 export interface CategoryData {
   id: string;
   name: string;
   description: string;
   image: string;
-  is_active: boolean;
+  is_active?: boolean;
   games?: Item[];
 }
+
 interface CategoriesResponse {
   success: boolean;
   status: number;
@@ -30,51 +33,48 @@ interface CategoriesResponse {
   data: CategoryData[];
 }
 
-interface CategoryResponse {
-  success: boolean;
-  status: number;
-  message: string;
-  data: CategoryData;
-}
 interface CategoryState {
-  category: CategoryData | null;
   categories: CategoryData[];
   loading: boolean;
   error: string | null;
 }
 
+// ================= Initial State =================
 const initialState: CategoryState = {
-  category: null,
   categories: [],
   loading: false,
   error: null,
 };
 
-// ================ getUser ===============
-export const getCategory = createAsyncThunk<
-  CategoryData,
-  { id: string },
+// ================= Thunks =================
+
+// ================ getCategoriesAuth ===============
+// للمستخدم المسجل (مع token)
+export const getCategoriesAuth = createAsyncThunk<
+  CategoryData[],
+  void,
   { rejectValue: string }
->("category/getCategory", async ({ id }, thunkAPI) => {
+>("category/getCategoriesAuth", async (_, thunkAPI) => {
   try {
-    const res = await useGetDataToken<CategoryResponse>(`show/category/${id}`);
-    return res.data; // ← ناخد الـ data فقط
+    const res = await useGetDataToken<CategoriesResponse>("show/categories");
+    return res.data;
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
     return thunkAPI.rejectWithValue(
-      err.response?.data.message || "getCategory failed"
+      err.response?.data.message || "getCategoriesAuth failed"
     );
   }
 });
 
-// ================ getUser ===============
+// ================ getCategories ===============
+// للزوار (بدون token)
 export const getCategories = createAsyncThunk<
   CategoryData[],
   void,
   { rejectValue: string }
 >("category/getCategories", async (_, thunkAPI) => {
   try {
-    const res = await useGetDataToken<CategoriesResponse>(`home/categories`);
+    const res = await useGetDataToken<CategoriesResponse>("home/categories");
     return res.data;
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
@@ -84,23 +84,36 @@ export const getCategories = createAsyncThunk<
   }
 });
 
-// ================ Slice ===============
+// ================= Slice =================
 const categoriesSlice = createSlice({
   name: "category",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // get category
+      // getCategoriesAuth
+      .addCase(getCategoriesAuth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(
-        getCategory.fulfilled,
-        (state, action: PayloadAction<CategoryData>) => {
-          state.category = action.payload;
+        getCategoriesAuth.fulfilled,
+        (state, action: PayloadAction<CategoryData[]>) => {
+          state.categories = action.payload;
           state.loading = false;
           state.error = null;
         }
       )
-      // getCategories
+      .addCase(getCategoriesAuth.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch categories (auth)";
+      })
+
+      // getCategories (guest)
+      .addCase(getCategories.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(
         getCategories.fulfilled,
         (state, action: PayloadAction<CategoryData[]>) => {
@@ -108,7 +121,11 @@ const categoriesSlice = createSlice({
           state.loading = false;
           state.error = null;
         }
-      );
+      )
+      .addCase(getCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch categories";
+      });
   },
 });
 
