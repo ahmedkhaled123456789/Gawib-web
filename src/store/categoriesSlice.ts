@@ -7,7 +7,7 @@ import { AxiosError } from "axios";
 import { useGetDataToken } from "../utils/api";
 
 // ================= Interfaces =================
-interface Item {
+export interface Item {
   id: string;
   name: string;
   category_id: string;
@@ -26,11 +26,36 @@ export interface CategoryData {
   games?: Item[];
 }
 
-interface CategoriesResponse {
+export interface UserData {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  played_games: number;
+  nationality: string;
+  total_purchases_amount: string;
+  is_first_game: boolean;
+  purchased_games: number;
+}
+
+// للزوار (guest)
+interface GetCategoriesResponse {
   success: boolean;
   status: number;
   message: string;
   data: CategoryData[];
+}
+
+// للمسجل (auth)
+interface GetCategoriesAuthResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: {
+    categories: CategoryData[];
+    user: UserData;
+  };
 }
 
 interface CategoryState {
@@ -49,15 +74,16 @@ const initialState: CategoryState = {
 // ================= Thunks =================
 
 // ================ getCategoriesAuth ===============
-// للمستخدم المسجل (مع token)
 export const getCategoriesAuth = createAsyncThunk<
   CategoryData[],
   void,
   { rejectValue: string }
 >("category/getCategoriesAuth", async (_, thunkAPI) => {
   try {
-    const res = await useGetDataToken<CategoriesResponse>("show/categories");
-    return res.data;
+    const res = await useGetDataToken<GetCategoriesAuthResponse>(
+      "show/categories"
+    );
+    return res.data.categories; // ✅ ناخد الـ categories بس
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
     return thunkAPI.rejectWithValue(
@@ -67,15 +93,14 @@ export const getCategoriesAuth = createAsyncThunk<
 });
 
 // ================ getCategories ===============
-// للزوار (بدون token)
 export const getCategories = createAsyncThunk<
   CategoryData[],
   void,
   { rejectValue: string }
 >("category/getCategories", async (_, thunkAPI) => {
   try {
-    const res = await useGetDataToken<CategoriesResponse>("home/categories");
-    return res.data;
+    const res = await useGetDataToken<GetCategoriesResponse>("home/categories");
+    return res.data; // ✅ بيرجع array مباشر
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
     return thunkAPI.rejectWithValue(
