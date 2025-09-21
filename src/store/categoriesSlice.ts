@@ -83,6 +83,12 @@ export const getCategoriesAuth = createAsyncThunk<
     const res = await useGetDataToken<GetCategoriesAuthResponse>(
       "show/categories"
     );
+
+    // ✅ تحديث الـ user في localStorage
+    if (res.data.user) {
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+    }
+
     return res.data.categories; // ✅ ناخد الـ categories بس
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
@@ -91,6 +97,7 @@ export const getCategoriesAuth = createAsyncThunk<
     );
   }
 });
+
 
 // ================ getCategories ===============
 export const getCategories = createAsyncThunk<

@@ -1,8 +1,7 @@
-// GameSetup.tsx
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../store";
-import { createGame } from "../store/preGameSlice";
+import { createGame, firstGame } from "../store/preGameSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -21,15 +20,11 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
 
   const handleIncrement = (
     setter: React.Dispatch<React.SetStateAction<number>>
-  ) => {
-    setter((prev) => (prev < 6 ? prev + 1 : 6));
-  };
+  ) => setter((prev) => (prev < 6 ? prev + 1 : 6));
 
   const handleDecrement = (
     setter: React.Dispatch<React.SetStateAction<number>>
-  ) => {
-    setter((prev) => (prev > 1 ? prev - 1 : 1));
-  };
+  ) => setter((prev) => (prev > 1 ? prev - 1 : 1));
 
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
@@ -45,9 +40,13 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
       return;
     }
 
-    const newGame = {
-      user_id: user?.id,
-      ids: selectedIds,
+    if (!user) {
+      toast.error("لم يتم العثور على المستخدم");
+      return;
+    }
+
+    // body الأساسي (من غير ids)
+    const baseGameData = {
       game_name: gameName,
       first_team_name: team1,
       second_team_name: team2,
@@ -55,18 +54,50 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
       second_team_players_count: String(score2),
     };
 
+    // ✅ لو أول مرة يلعب → firstGame بس
+    if (user.is_first_game === true) {
+      dispatch(firstGame(baseGameData))
+        .unwrap()
+        .then((res: any) => {
+          console.log("✅ firstGame response:", res);
+
+          // تحديث اليوزر في localStorage
+          const updatedUser = { ...user, is_first_game: true };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+
+          toast.success(res?.message || "تم تسجيل أول لعبة بنجاح");
+
+          // ❌ مفيش createGame هنا
+          navigate("/GameBoard", { state: { game: res } });
+        })
+        .catch((err: any) => {
+          toast.error(err || "حدث خطأ أثناء تشغيل أول لعبة");
+          console.error("❌ firstGame error:", err);
+        });
+    } else {
+      // ✅ لو لعب قبل كده → على طول createGame
+      createNewGame(baseGameData);
+    }
+  };
+
+  const createNewGame = (baseGameData: any) => {
+    const newGame = {
+      ...baseGameData,
+      ids: selectedIds,
+    };
+
     dispatch(createGame(newGame))
       .unwrap()
       .then((res: any) => {
-        console.log("Game created successfully ✅", res);
-        toast.success(res?.message);
+        console.log("✅ Game created successfully:", res);
+        toast.success(res?.message || "تم إنشاء اللعبة بنجاح");
         navigate("/GameBoard", { state: { game: res } });
       })
       .catch((err: any) => {
         const backendMessage =
           err?.response?.data?.message || err?.message || "حدث خطأ ما";
         toast.error(backendMessage);
-        console.log("Error creating game ❌", err);
+        console.error("❌ Error creating game:", err);
       });
   };
 

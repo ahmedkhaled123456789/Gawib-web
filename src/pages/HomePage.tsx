@@ -1,6 +1,6 @@
 import Footer from "../components/Footer";
 import GameSetup from "../components/GameSetup";
-import Header from "../components/Header";
+// import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import ProductSection from "../components/products/ProductSection";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +26,7 @@ const HomePage = () => {
   return (
     <>
       {/* Header with Menu Icon */}
-      <Header />
+      {/* <Header /> */}
       <div className="px-12">
         <HeroSection categories={categories} loading={loading} error={error} />
 

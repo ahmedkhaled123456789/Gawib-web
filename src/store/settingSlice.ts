@@ -2,33 +2,31 @@ import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/tool
 import { AxiosError } from "axios";
 import { useGetDataToken } from "../hooks/useGetData";
 
- 
+// شكل البيانات الراجعة من الـ API
 interface SettingData {
- key: string;
- value: string;
-  type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data:any;
- }
+  id: number;
+  key: string;
+  value: string;
+}
 
 interface SettingState {
   setting: SettingData | null;
-  settings :  SettingData | null;
+  settings: SettingData[];   // 👈 Array
   loading: boolean;
   error: string | null;
 }
 
 const initialState: SettingState = {
   setting: null,
-  settings:null,
+  settings: [],
   loading: false,
   error: null,
 };
 
-// ================ getUser ===============
+// ================ getSetting by ID ===============
 export const getSetting = createAsyncThunk<
   SettingData,
-  { id: string }, 
+  { id: string },
   { rejectValue: string }
 >(
   "setting/getSetting",
@@ -43,24 +41,24 @@ export const getSetting = createAsyncThunk<
   }
 );
 
-
-// ================ getUser ===============
+// ================ getSettings (all) ===============
 export const getSettings = createAsyncThunk<
-  SettingData,
-  void, 
+  SettingData[],   // 👈 Array
+  void,
   { rejectValue: string }
 >(
   "setting/getSettings",
   async (_, thunkAPI) => {
     try {
-      const res = await useGetDataToken<SettingData>(`settings`);
-      return res;
+      const res = await useGetDataToken<{ data: SettingData[] }>(`settings`);
+      return res.data; // 👈 Array من الـ response
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
       return thunkAPI.rejectWithValue(err.response?.data.message || "getSettings failed");
     }
   }
 );
+
 // ================ Slice ===============
 const settingSlice = createSlice({
   name: "setting",
@@ -68,18 +66,18 @@ const settingSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // getSettings 
-     .addCase(getSetting.fulfilled, (state, action: PayloadAction<SettingData>) => {
+      // getSetting
+      .addCase(getSetting.fulfilled, (state, action: PayloadAction<SettingData>) => {
         state.setting = action.payload;
         state.loading = false;
         state.error = null;
       })
-      // getSetting
-.addCase(getSettings.fulfilled, (state, action: PayloadAction<SettingData>) => {
+      // getSettings
+      .addCase(getSettings.fulfilled, (state, action: PayloadAction<SettingData[]>) => {
         state.settings = action.payload;
         state.loading = false;
         state.error = null;
-      })       
+      });
   },
 });
 

@@ -1,6 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
+import { Loader2 } from "lucide-react";
+import PaymenSuccess from "../pages/PaymenSuccess";
+import ShareApp from "../pages/ShareApp";
 
 // Lazy imports
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -25,7 +28,13 @@ const Routers = () => {
   const token = localStorage.getItem("accessToken");
 
   return (
-    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className=" h-screen flex justify-center items-center">
+          <Loader2 className="animate-spin mx-auto mt-20" />
+        </div>
+      }
+    >
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="home" element={<HomePage />} />
@@ -41,6 +50,7 @@ const Routers = () => {
           <Route path="resetPassword" element={<ResetPasswordPage />} />
           <Route path="game" element={<GamePurchasePage />} />
           <Route path="/payment-return" element={<PaymentPage />} />
+          <Route path="/api/:id/return" element={<PaymenSuccess />} />
         </Route>
 
         <Route path="GameBoard" element={<GameBoard />} />
@@ -50,9 +60,10 @@ const Routers = () => {
         <Route path="Play" element={<PlayPage />} />
         <Route path="about" element={<AboutJaweb />} />
         <Route path="rules" element={<RulesPage />} />
-        <Route path="ContactUs" element={<ContactUs />} />
-        <Route path="SocialMedia" element={<SocialMedia />} />
+        <Route path="contact-us" element={<ContactUs />} />
+        <Route path="socialMedia" element={<SocialMedia />} />
         <Route path="Deal" element={<DealPage />} />
+        <Route path="share-app" element={<ShareApp />} />
       </Routes>
     </Suspense>
   );

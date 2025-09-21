@@ -90,11 +90,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             value={form.email}
             onChange={handleChange}
           />
-          {validationErrors.email && (
+          {/* {validationErrors.email && (
             <p className="text-red-500 text-xs text-right mt-1">
               {validationErrors.email}
             </p>
-          )}
+          )} */}
         </div>
 
         {/* رقم الجوال */}

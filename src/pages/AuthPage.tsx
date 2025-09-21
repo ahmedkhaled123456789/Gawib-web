@@ -133,7 +133,7 @@ const AuthPage: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
-    useEffect(() => {
+  useEffect(() => {
     if (authError) {
       toast.error(authError); // 🔥 عرض رسالة الخطأ في toast
     }
@@ -158,7 +158,8 @@ const AuthPage: React.FC = () => {
 
     const result = await dispatch(signupUser(form));
     if (signupUser.fulfilled.match(result)) {
-      navigate("/");
+      toast.success("تم إنشاء الحساب بنجاح، برجاء تسجيل الدخول"); 
+      setIsRegister(false);
     }
   };
 
