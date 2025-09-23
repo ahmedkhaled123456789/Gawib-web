@@ -95,7 +95,7 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
       })
       .catch((err: any) => {
         const backendMessage =
-          err?.response?.data?.message || err?.message || "حدث خطأ ما";
+          err?.response?.data?.message || err?.message || "اختار ألعاب صحيحة";
         toast.error(backendMessage);
         console.error("❌ Error creating game:", err);
       });
