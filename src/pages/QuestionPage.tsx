@@ -123,18 +123,32 @@ const QuestionPage = () => {
         <div className="flex flex-col md:flex-row border-2 border-[#085E9C] rounded w-full md:w-4/5 h-auto md:h-[600px]">
           {/* Center */}
           <div className="w-full md:w-10/12 p-4">
-            <div className="text-center w-full border border-black text-black rounded-br">
-              <div className="text-3xl py-6 flex flex-col items-center gap-4">
+            <div className="text-center w-full  rounded-br">
+              <div className="border-2 border-[#848484] text-xl md:text-2xl font-bold p-0">
                 {/* النص */}
                 {question?.question?.text && (
-                  <span>{question.question.text}</span>
+                  <div className="flex justify-center items-center text-center w-full py-4">
+                    {question.question.text}
+                  </div>
                 )}
 
+                {question?.hint && (
+                  <div className="flex items-center justify-end gap-x-2">
+                    <div className="flex items-center gap-2 text-[#085E9C] py-2 px-3 border border-black border-l-0 border-b-0 rounded-tr">
+                      <MoveRight />
+                      <span>{question.hint}</span>
+                      <MoveLeft />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="text-3xl py-6 flex flex-col items-center gap-4 border-2 border-[#848484] min-h-[300px] mt-2">
                 {/* الصورة */}
                 <img
                   src={question?.question?.image || "/images/back.jpg"}
                   alt="question"
-                  className="mx-auto max-h-60 object-contain"
+                  className="mx-auto max-h-96 w-screen object-contain"
                   loading="lazy"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src =
@@ -167,16 +181,6 @@ const QuestionPage = () => {
                   !question?.question?.video &&
                   "مفيش سؤال"}
               </div>
-
-              {question?.hint && (
-                <div className="flex items-center justify-end gap-2">
-                  <div className="flex items-center gap-2 text-[#085E9C] py-2 px-3 border-t border-r border-black rounded-tr">
-                    <MoveRight />
-                    <span>{question.hint}</span>
-                    <MoveLeft />
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
