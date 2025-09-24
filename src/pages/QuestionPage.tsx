@@ -9,6 +9,7 @@ import {
   setFirstTeamDoublePoints,
   setSecondTeamDoublePoints,
 } from "../store/gameFeaturesSlice";
+import Timer from "../components/Timer";
 
 const QuestionPage = () => {
   const location = useLocation();
@@ -16,13 +17,16 @@ const QuestionPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // القيم من الـ Redux
   const {
     first_team_call,
     second_team_call,
     first_team_double_points,
     second_team_double_points,
   } = useSelector((state: RootState) => state.gameFeatures);
+
+  const currentTeam = game?.data?.details?.current_team; // 1 أو 2
+  const isFirstTeamActive = currentTeam === 1;
+  const isSecondTeamActive = currentTeam === 2;
 
   const handleClick = (data: any) => {
     navigate("/Awnser", { state: { answer: data, game } });
@@ -57,13 +61,18 @@ const QuestionPage = () => {
             </span>
           </div>
 
-          {/* Action icons */}
+          {/* First team action icons */}
           <div className="flex items-center justify-center gap-4">
             <span
-              className={`flex items-center justify-center p-2 rounded cursor-pointer ${
+              className={`flex items-center justify-center p-2 rounded ${
                 first_team_double_points ? "bg-green-500" : "bg-[#085E9C]"
+              } ${
+                !isFirstTeamActive
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
               }`}
               onClick={() =>
+                isFirstTeamActive &&
                 dispatch(
                   setFirstTeamDoublePoints(first_team_double_points ? 0 : 1)
                 )
@@ -72,10 +81,15 @@ const QuestionPage = () => {
               <img src="/images/hand.png" className="w-8 sm:w-12" alt="hand" />
             </span>
             <span
-              className={`flex items-center justify-center p-2 rounded cursor-pointer ${
+              className={`flex items-center justify-center p-2 rounded ${
                 first_team_call ? "bg-green-500" : "bg-[#085E9C]"
+              } ${
+                !isFirstTeamActive
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
               }`}
               onClick={() =>
+                isFirstTeamActive &&
                 dispatch(setFirstTeamCall(first_team_call ? 0 : 1))
               }
             >
@@ -93,12 +107,18 @@ const QuestionPage = () => {
             </span>
           </div>
 
+          {/* Second team action icons */}
           <div className="flex items-center justify-center mb-4 gap-4">
             <span
-              className={`flex items-center justify-center border p-2 rounded cursor-pointer ${
+              className={`flex items-center justify-center border p-2 rounded ${
                 second_team_double_points ? "bg-green-500" : "border-[#085E9C]"
+              } ${
+                !isSecondTeamActive
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
               }`}
               onClick={() =>
+                isSecondTeamActive &&
                 dispatch(
                   setSecondTeamDoublePoints(second_team_double_points ? 0 : 1)
                 )
@@ -107,10 +127,15 @@ const QuestionPage = () => {
               <img src="/images/hand.png" className="w-8 sm:w-12" alt="hand" />
             </span>
             <span
-              className={`flex items-center justify-center border p-2 rounded cursor-pointer ${
+              className={`flex items-center justify-center border p-2 rounded ${
                 second_team_call ? "bg-green-500" : "border-[#085E9C]"
+              } ${
+                !isSecondTeamActive
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
               }`}
               onClick={() =>
+                isSecondTeamActive &&
                 dispatch(setSecondTeamCall(second_team_call ? 0 : 1))
               }
             >
@@ -125,7 +150,6 @@ const QuestionPage = () => {
           <div className="w-full md:w-10/12 p-4">
             <div className="text-center w-full  rounded-br">
               <div className="border-2 border-[#848484] text-xl md:text-2xl font-bold p-0">
-                {/* النص */}
                 {question?.question?.text && (
                   <div className="flex justify-center items-center text-center w-full py-4">
                     {question.question.text}
@@ -144,7 +168,6 @@ const QuestionPage = () => {
               </div>
 
               <div className="text-3xl py-6 flex flex-col items-center gap-4 border-2 border-[#848484] min-h-[300px] mt-2">
-                {/* الصورة */}
                 <img
                   src={question?.question?.image || "/images/back.jpg"}
                   alt="question"
@@ -156,7 +179,6 @@ const QuestionPage = () => {
                   }}
                 />
 
-                {/* الصوت */}
                 {question?.question?.audio && (
                   <audio
                     controls
@@ -165,7 +187,6 @@ const QuestionPage = () => {
                   />
                 )}
 
-                {/* الفيديو */}
                 {question?.question?.video && (
                   <video
                     controls
@@ -174,7 +195,6 @@ const QuestionPage = () => {
                   />
                 )}
 
-                {/* لو مفيش أي حاجة */}
                 {!question?.question?.text &&
                   !question?.question?.image &&
                   !question?.question?.audio &&
@@ -186,37 +206,28 @@ const QuestionPage = () => {
 
           {/* Left */}
           <div className="flex flex-col justify-between w-full md:w-2/12 h-[150px] md:h-full">
-            {/* Timer and play */}
-            <div className="flex items-center justify-center gap-2 bg-[#085E9C] text-white rounded-br px-2 py-2">
-              <img
-                src="/images/loop.png"
-                className="w-6 h-6 md:w-8 md:h-8"
-                alt="loop"
-              />
-              <span className="text-sm md:text-base">01:25</span>
-              <img
-                src="/images/play.png"
-                className="w-6 h-6 md:w-8 md:h-8"
-                alt="play"
-              />
-            </div>
+            {/* Timer component */}
+            <Timer />
 
             {/* Answer button */}
-            {/* Answer button أو زرار الرجوع */}
             {question?.question?.text ||
             question?.question?.image ||
             question?.question?.audio ||
             question?.question?.video ? (
               <div
-                className="bg-[#085E9C] text-center font-bold text-lg md:text-2xl text-white rounded-tr px-4 py-2 cursor-pointer"
-                onClick={() => handleClick(question)}
+                className={`bg-[#085E9C] text-center font-bold text-lg md:text-2xl text-white rounded-tr px-4 py-2 ${
+                  currentTeam
+                    ? "cursor-pointer"
+                    : "opacity-50 cursor-not-allowed"
+                }`}
+                onClick={() => currentTeam && handleClick(question)}
               >
                 الإجابة
               </div>
             ) : (
               <div
                 className="bg-gray-500 text-center font-bold text-lg md:text-2xl text-white rounded-tr px-4 py-2 cursor-pointer"
-                onClick={() => navigate(-1)} // ترجع للصفحة السابقة
+                onClick={() => navigate(-1)}
               >
                 الرجوع
               </div>

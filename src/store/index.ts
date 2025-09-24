@@ -14,6 +14,8 @@ import gameFeaturesSlice from "./gameFeaturesSlice";
 import reportSlice from "./ReportSlice";
 import paymentSlice from "./paymentSlice";
 import freePaymentSlice from "./freePaymentSlic";
+import endGameReducer from "./endGameSlic";
+import activeGamesReducer from "./ActiveGameSlic";
 
 const store = configureStore({
   reducer: {
@@ -31,7 +33,9 @@ const store = configureStore({
     gameFeatures: gameFeaturesSlice,
     report: reportSlice,
     payment: paymentSlice,
-    freePaymentSlice:freePaymentSlice ,
+    freePaymentSlice: freePaymentSlice,
+    endGame: endGameReducer,
+    activeGames: activeGamesReducer,
   },
 });
 
