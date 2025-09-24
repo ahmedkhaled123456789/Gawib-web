@@ -8,7 +8,6 @@ import type { AppDispatch, RootState } from "../store";
 import { useEffect, useState } from "react";
 import { getCategories, getCategoriesAuth } from "../store/categoriesSlice";
 import Header from "../components/Header";
-import ActiveGames from "../components/ActiveGames";
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { categories, loading, error } = useSelector(
@@ -30,7 +29,6 @@ const HomePage = () => {
       {/* Header with Menu Icon */}
       <Header />
       <div className="px-12">
-        <ActiveGames />
         <HeroSection categories={categories} loading={loading} error={error} />
 
         {categories.map((cat) => (

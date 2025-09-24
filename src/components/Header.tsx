@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, User2 } from "lucide-react";
+import { Menu, X, User2, Gamepad2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { logOut } from "../store/auth/authSlice";
@@ -24,7 +24,13 @@ const Header = () => {
         {/* Right: تسجيل الدخول / الخروج */}
         <nav className="hidden md:flex items-center text-black font-medium gap-6 text-lg">
           {user ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
+              <button className="flex items-center gap-2 px-5 py-2 border border-gray-600 hover:rounded-2xl   text-black rounded-md font-semibold transition-all duration-200">
+                <Link to="/active-game" className="flex items-center gap-2">
+                  العابي <Gamepad2 size={20} />
+                </Link>
+              </button>
+
               <Link to="/profile" className="flex items-center gap-2">
                 <span>
                   {user.first_name ? `${user.first_name} ` : user.email}

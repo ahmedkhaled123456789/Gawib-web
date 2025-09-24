@@ -4,6 +4,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import { Loader2 } from "lucide-react";
 import PaymenSuccess from "../pages/PaymenSuccess";
 import ShareApp from "../pages/ShareApp";
+import ActiveGames from "../components/ActiveGames";
 
 // Lazy imports
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -64,6 +65,7 @@ const Routers = () => {
         <Route path="socialMedia" element={<SocialMedia />} />
         <Route path="Deal" element={<DealPage />} />
         <Route path="share-app" element={<ShareApp />} />
+        <Route path="active-game" element={<ActiveGames />} />
       </Routes>
     </Suspense>
   );

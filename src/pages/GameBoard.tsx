@@ -9,14 +9,21 @@ import {
 
 const GameBoard = () => {
   const location = useLocation();
-  const { game: gameFromSetup, updatedGame } = location.state || {};
-  const game = updatedGame || gameFromSetup;
+  const { game: gameFromSetup, updatedGame, gameData } = location.state || {};
 
-  console.log("GameBoard location.state:", game);
+  // ✅ لو gameData موجود خده، لو مش موجود خد game أو updatedGame
+  const game = gameData
+    ? { data: gameData }
+    : updatedGame
+    ? updatedGame
+    : gameFromSetup;
+
+  console.log("GameBoard game:", game);
+  console.log("GameBoard gameData:", gameData);
 
   const navigate = useNavigate();
-
   const dispatch = useDispatch<AppDispatch>();
+
   const { first_team_double_points, second_team_double_points } = useSelector(
     (state: RootState) => state.gameFeatures
   );
@@ -29,9 +36,7 @@ const GameBoard = () => {
     );
   }
 
-  // handle question click
   const handleClick = (data: any) => {
-    // لو متجاوب قبل كده، ميسمحش بالفتح
     if (!data || data.is_answered) return;
     navigate("/QuestionPage", {
       state: { question: data, game: game },
@@ -40,12 +45,11 @@ const GameBoard = () => {
 
   return (
     <div className="flex flex-col justify-between h-full p-8 lg:p-12 sm:p-4 mb-6">
-      {/* Grid of Categories */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-2">
         {game.data.games.map((cat: any) => (
           <div key={cat.id} className="flex items-center justify-center">
             {/* Left buttons */}
-            <div className="flex  flex-col-reverse gap-2 h-full">
+            <div className="flex flex-col-reverse gap-2 h-full">
               {Array(3)
                 .fill(null)
                 .map((_, idx) => {
@@ -56,7 +60,7 @@ const GameBoard = () => {
                       className={`w-16 sm:w-20 h-16 rounded rounded-br-xl rounded-tl-xl text-xs sm:text-sm font-bold
                         ${
                           val?.is_answered
-                            ? "bg-gray-200 text-[#085E9C] cursor-not-allowed text-2xlfont-bold "
+                            ? "bg-gray-200 text-[#085E9C] cursor-not-allowed"
                             : "bg-[#085E9C] text-white hover:bg-blue-700"
                         }`}
                       onClick={() => handleClick(val)}
@@ -89,10 +93,10 @@ const GameBoard = () => {
                   return (
                     <button
                       key={`right-${idx}`}
-                      className={`w-16 sm:w-20 h-16  rounded rounded-bl-xl rounded-tr-xl text-xs sm:text-sm font-bold
+                      className={`w-16 sm:w-20 h-16 rounded rounded-bl-xl rounded-tr-xl text-xs sm:text-sm font-bold
                         ${
                           val?.is_answered
-                            ? "bg-gray-200 text-[#085E9C] cursor-not-allowed text-2xlfont-bold "
+                            ? "bg-gray-200 text-[#085E9C] cursor-not-allowed"
                             : "bg-[#085E9C] text-white hover:bg-blue-700"
                         }`}
                       onClick={() => handleClick(val)}
@@ -163,7 +167,6 @@ const PlayerScore = ({
   >
     <span className="font-bold text-xl sm:text-2xl text-[#085E9C]">{name}</span>
 
-    {/* Double Point */}
     <div
       className={`border border-[#085E9C] rounded w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center cursor-pointer ${
         isDouble ? "bg-yellow-300" : "bg-white"
@@ -177,7 +180,6 @@ const PlayerScore = ({
       />
     </div>
 
-    {/* Score Control */}
     <div className="border border-[#085E9C] rounded-md flex items-center">
       <button className="bg-[#FFC629] text-[#085E9C] border border-[#085E9C] font-bold rounded w-12 h-12 sm:w-16 sm:h-16 text-lg sm:text-xl">
         -
