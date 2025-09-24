@@ -101,6 +101,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <div>
           <PhoneInput
             country={"eg"}
+            enableSearch
             value={form.phone_number.replace("+", "")}
             onChange={(value: string) =>
               setForm((prevForm) => ({
