@@ -199,6 +199,18 @@ const AwnserPage = () => {
             </span>
           </div>
 
+          {/* Current Team */}
+          <div className="flex items-center justify-around font-bold rounded py-2 m-4 border-2 border-[#085E9C] text-[#085E9C] bg-yellow-100">
+            <span>الدور الحالي:</span>
+            <span className="px-2">
+              {isFirstTeamActive
+                ? details?.first_team_name
+                : isSecondTeamActive
+                ? details?.second_team_name
+                : "غير محدد"}
+            </span>
+          </div>
+
           {/* Second Team */}
           <div className="flex items-center justify-around text-[#085E9C] border font-bold border-[#085E9C] rounded m-4">
             <span className="py-2">{details?.second_team_name}</span>

@@ -24,6 +24,7 @@ const ContactUs = lazy(() => import("../pages/ContactUs"));
 const SocialMedia = lazy(() => import("../pages/SocialMedia"));
 const DealPage = lazy(() => import("../pages/DealPage"));
 const ResetPasswordPage = lazy(() => import("../pages/ResetPasswordPage"));
+const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 
 const Routers = () => {
   const token = localStorage.getItem("accessToken");
@@ -66,6 +67,7 @@ const Routers = () => {
         <Route path="Deal" element={<DealPage />} />
         <Route path="share-app" element={<ShareApp />} />
         <Route path="active-game" element={<ActiveGames />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   );

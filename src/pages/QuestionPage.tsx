@@ -70,7 +70,7 @@ const QuestionPage = () => {
                 game?.data?.details?.first_team_double_points
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#085E9C] cursor-pointer"
-              }`}
+              } ${!isFirstTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isFirstTeamActive &&
                 !game?.data?.details?.first_team_double_points &&
@@ -88,7 +88,7 @@ const QuestionPage = () => {
                 first_team_call || game?.data?.details?.first_team_call
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#085E9C] cursor-pointer"
-              }`}
+              } ${!isFirstTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isFirstTeamActive &&
                 !game?.data?.details?.first_team_call &&
@@ -118,7 +118,7 @@ const QuestionPage = () => {
                 game?.data?.details?.second_team_double_points
                   ? "bg-gray-400 cursor-not-allowed"
                   : "border-[#085E9C] cursor-pointer"
-              }`}
+              } ${!isSecondTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isSecondTeamActive &&
                 !game?.data?.details?.second_team_double_points &&
@@ -136,7 +136,7 @@ const QuestionPage = () => {
                 second_team_call || game?.data?.details?.second_team_call
                   ? "bg-gray-400 cursor-not-allowed"
                   : "border-[#085E9C] cursor-pointer"
-              }`}
+              } ${!isSecondTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isSecondTeamActive &&
                 !game?.data?.details?.second_team_call &&
