@@ -118,7 +118,9 @@ const GameBoard = () => {
           score={game.data.details.first_team_score}
           active={game.data.details.current_team === 1}
           isDouble={first_team_double_points === 1}
+          backendDoubleUsed={game.data.details.first_team_double_points}
           onToggleDouble={() =>
+            !game.data.details.first_team_double_points &&
             dispatch(
               setFirstTeamDoublePoints(first_team_double_points === 1 ? 0 : 1)
             )
@@ -136,7 +138,9 @@ const GameBoard = () => {
           score={game.data.details.second_team_score}
           active={game.data.details.current_team === 2}
           isDouble={second_team_double_points === 1}
+          backendDoubleUsed={game.data.details.second_team_double_points}
           onToggleDouble={() =>
+            !game.data.details.second_team_double_points &&
             dispatch(
               setSecondTeamDoublePoints(second_team_double_points === 1 ? 0 : 1)
             )
@@ -152,12 +156,14 @@ const PlayerScore = ({
   score,
   active,
   isDouble,
+  backendDoubleUsed,
   onToggleDouble,
 }: {
   name: string;
   score: number;
   active: boolean;
   isDouble: boolean;
+  backendDoubleUsed: boolean;
   onToggleDouble: () => void;
 }) => (
   <div
@@ -167,11 +173,20 @@ const PlayerScore = ({
   >
     <span className="font-bold text-xl sm:text-2xl text-[#085E9C]">{name}</span>
 
+    {/* زرار الـ Double */}
     <div
-      className={`border border-[#085E9C] rounded w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center cursor-pointer ${
-        isDouble ? "bg-yellow-300" : "bg-white"
-      }`}
-      onClick={onToggleDouble}
+      className={`border border-[#085E9C] rounded w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center 
+        ${
+          backendDoubleUsed
+            ? "bg-gray-300 cursor-not-allowed"
+            : isDouble
+            ? "bg-yellow-300 cursor-pointer"
+            : "bg-white cursor-pointer"
+        }
+      `}
+      onClick={() => {
+        if (!backendDoubleUsed) onToggleDouble();
+      }}
     >
       <img
         src="/images/yyyy.png"
@@ -180,6 +195,7 @@ const PlayerScore = ({
       />
     </div>
 
+    {/* Score Section */}
     <div className="border border-[#085E9C] rounded-md flex items-center">
       <button className="bg-[#FFC629] text-[#085E9C] border border-[#085E9C] font-bold rounded w-12 h-12 sm:w-16 sm:h-16 text-lg sm:text-xl">
         -

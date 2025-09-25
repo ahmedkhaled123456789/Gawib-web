@@ -17,8 +17,6 @@ const QuestionPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(game.data.details);
-
   const {
     first_team_call,
     second_team_call,
@@ -65,16 +63,17 @@ const QuestionPage = () => {
 
           {/* First team action icons */}
           <div className="flex items-center justify-center gap-4">
+            {/* Double Points */}
             <span
               className={`flex items-center justify-center p-2 rounded ${
-                first_team_double_points ? "bg-green-500" : "bg-[#085E9C]"
-              } ${
-                !isFirstTeamActive
-                  ? "opacity-50 cursor-not-allowed"
-                  : "cursor-pointer"
+                first_team_double_points ||
+                game?.data?.details?.first_team_double_points
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#085E9C] cursor-pointer"
               }`}
               onClick={() =>
                 isFirstTeamActive &&
+                !game?.data?.details?.first_team_double_points &&
                 dispatch(
                   setFirstTeamDoublePoints(first_team_double_points ? 0 : 1)
                 )
@@ -82,16 +81,17 @@ const QuestionPage = () => {
             >
               <img src="/images/hand.png" className="w-8 sm:w-12" alt="hand" />
             </span>
+
+            {/* Call */}
             <span
               className={`flex items-center justify-center p-2 rounded ${
-                first_team_call ? "bg-green-500" : "bg-[#085E9C]"
-              } ${
-                !isFirstTeamActive
-                  ? "opacity-50 cursor-not-allowed"
-                  : "cursor-pointer"
+                first_team_call || game?.data?.details?.first_team_call
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#085E9C] cursor-pointer"
               }`}
               onClick={() =>
                 isFirstTeamActive &&
+                !game?.data?.details?.first_team_call &&
                 dispatch(setFirstTeamCall(first_team_call ? 0 : 1))
               }
             >
@@ -111,16 +111,17 @@ const QuestionPage = () => {
 
           {/* Second team action icons */}
           <div className="flex items-center justify-center mb-4 gap-4">
+            {/* Double Points */}
             <span
               className={`flex items-center justify-center border p-2 rounded ${
-                second_team_double_points ? "bg-green-500" : "border-[#085E9C]"
-              } ${
-                !isSecondTeamActive
-                  ? "opacity-50 cursor-not-allowed"
-                  : "cursor-pointer"
+                second_team_double_points ||
+                game?.data?.details?.second_team_double_points
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "border-[#085E9C] cursor-pointer"
               }`}
               onClick={() =>
                 isSecondTeamActive &&
+                !game?.data?.details?.second_team_double_points &&
                 dispatch(
                   setSecondTeamDoublePoints(second_team_double_points ? 0 : 1)
                 )
@@ -128,16 +129,17 @@ const QuestionPage = () => {
             >
               <img src="/images/hand.png" className="w-8 sm:w-12" alt="hand" />
             </span>
+
+            {/* Call */}
             <span
               className={`flex items-center justify-center border p-2 rounded ${
-                second_team_call ? "bg-green-500" : "border-[#085E9C]"
-              } ${
-                !isSecondTeamActive
-                  ? "opacity-50 cursor-not-allowed"
-                  : "cursor-pointer"
+                second_team_call || game?.data?.details?.second_team_call
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "border-[#085E9C] cursor-pointer"
               }`}
               onClick={() =>
                 isSecondTeamActive &&
+                !game?.data?.details?.second_team_call &&
                 dispatch(setSecondTeamCall(second_team_call ? 0 : 1))
               }
             >

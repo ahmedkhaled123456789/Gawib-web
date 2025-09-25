@@ -2,7 +2,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
-import { updateAnswer } from "../store/answerSlice";
+import { updateAnswer, type AnswerData } from "../store/answerSlice";
 import {
   setFirstTeamCall,
   setSecondTeamCall,
@@ -31,11 +31,14 @@ const AwnserPage = () => {
     second_team_double_points,
   } = useSelector((state: RootState) => state.gameFeatures);
 
-  // تحديد الفريق الحالي
-  const currentTeam = game?.data?.details?.current_team;
+  const details = game?.data?.details;
+
+  // الفريق الحالي
+  const currentTeam = details?.current_team;
   const isFirstTeamActive = currentTeam === 1;
   const isSecondTeamActive = currentTeam === 2;
 
+  // اختيار الفريق
   const handleSelectTeam = (team: "first_team" | "second_team" | "none") => {
     if (loading) return;
     if (!game || !answer) {
@@ -44,10 +47,11 @@ const AwnserPage = () => {
     }
 
     const questionPoints = answer?.points || 0;
-    let firstTeamScore = game.data.details.first_team_score || 0;
-    let secondTeamScore = game.data.details.second_team_score || 0;
-    let nextTeam = game.data.details.current_team || 1;
+    let firstTeamScore = details.first_team_score || 0;
+    let secondTeamScore = details.second_team_score || 0;
+    let nextTeam = details.current_team || 1;
 
+    // تحديث النقاط والدور
     if (team === "first_team") {
       firstTeamScore += first_team_double_points
         ? questionPoints * 2
@@ -62,19 +66,38 @@ const AwnserPage = () => {
       nextTeam = nextTeam === 1 ? 2 : 1;
     }
 
-    const selectedData = {
-      id: game.data.details.id,
+    const selectedData: AnswerData = {
+      id: details.id,
       question_id: answer.id,
-      who_answered: team === "first_team" ? 1 : team === "second_team" ? 2 : 0,
-      first_team_score: firstTeamScore,
-      second_team_score: secondTeamScore,
+      who_answered: 0,
       current_team: nextTeam,
-      first_team_double_points,
-      second_team_double_points,
-      first_team_call,
-      second_team_call,
     };
 
+    if (team === "first_team") {
+      selectedData.who_answered = 1;
+      selectedData.first_team_score = firstTeamScore;
+    } else if (team === "second_team") {
+      selectedData.who_answered = 2;
+      selectedData.second_team_score = secondTeamScore;
+    } else {
+      selectedData.who_answered = 0;
+    }
+
+    // double/call → ابعتها بس لو لسه مش مستخدمة في الـ backend
+    if (first_team_double_points && !details.first_team_double_points) {
+      selectedData.first_team_double_points = 1;
+    }
+    if (second_team_double_points && !details.second_team_double_points) {
+      selectedData.second_team_double_points = 1;
+    }
+    if (first_team_call && !details.first_team_call) {
+      selectedData.first_team_call = 1;
+    }
+    if (second_team_call && !details.second_team_call) {
+      selectedData.second_team_call = 1;
+    }
+
+    // إرسال البيانات
     dispatch(updateAnswer(selectedData))
       .unwrap()
       .then((res) => {
@@ -88,7 +111,7 @@ const AwnserPage = () => {
 
   const handleEndGame = () => {
     if (!game) return;
-    dispatch(endGame({ gameId: game.data.details.id, payload: {} }))
+    dispatch(endGame({ gameId: details.id, payload: {} }))
       .unwrap()
       .then((res) => {
         toast.success(res.message || "تم انهاء اللعبة");
@@ -124,28 +147,31 @@ const AwnserPage = () => {
           </div>
 
           <div className="text-center text-[#085E9C] font-bold mt-6">
-            <span>{game?.data?.details?.game_name ?? "التحدي"}</span>
+            <span>{details?.game_name ?? "التحدي"}</span>
             <br />
             <span>{answer?.points ?? 0} نقطة</span>
           </div>
 
           {/* First Team */}
           <div className="flex items-center justify-around text-white font-bold bg-[#085E9C] rounded py-2 m-4">
-            <span>{game?.data?.details?.first_team_name}</span>
-            <span className="px-2">
-              {game?.data?.details?.first_team_score}
-            </span>
+            <span>{details?.first_team_name}</span>
+            <span className="px-2">{details?.first_team_score}</span>
           </div>
 
-          {/* First Team Icon */}
+          {/* First Team Icons */}
           <div className="flex items-center justify-center gap-4">
             <span
-              className={`flex items-center justify-center p-2 rounded cursor-pointer ${
-                first_team_double_points ? "bg-green-500" : "bg-[#085E9C]"
+              className={`flex items-center justify-center p-2 rounded ${
+                details?.first_team_double_points
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : first_team_double_points
+                  ? "bg-green-500 cursor-pointer"
+                  : "bg-[#085E9C] cursor-pointer"
               } ${!isFirstTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isFirstTeamActive &&
                 !loading &&
+                !details?.first_team_double_points &&
                 dispatch(
                   setFirstTeamDoublePoints(first_team_double_points ? 0 : 1)
                 )
@@ -155,12 +181,17 @@ const AwnserPage = () => {
             </span>
 
             <span
-              className={`flex items-center justify-center p-2 rounded cursor-pointer ${
-                first_team_call ? "bg-green-500" : "bg-[#085E9C]"
+              className={`flex items-center justify-center p-2 rounded ${
+                details?.first_team_call
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : first_team_call
+                  ? "bg-green-500 cursor-pointer"
+                  : "bg-[#085E9C] cursor-pointer"
               } ${!isFirstTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isFirstTeamActive &&
                 !loading &&
+                !details?.first_team_call &&
                 dispatch(setFirstTeamCall(first_team_call ? 0 : 1))
               }
             >
@@ -168,27 +199,27 @@ const AwnserPage = () => {
             </span>
           </div>
 
-          {/* Second team */}
+          {/* Second Team */}
           <div className="flex items-center justify-around text-[#085E9C] border font-bold border-[#085E9C] rounded m-4">
-            <span className="py-2">
-              {game?.data?.details?.second_team_name}
-            </span>
+            <span className="py-2">{details?.second_team_name}</span>
             <span className="border-r py-2 px-2 border-[#085E9C]">
-              {game?.data?.details?.second_team_score}
+              {details?.second_team_score}
             </span>
           </div>
-          {/* Second team action icons */}
+
+          {/* Second Team Icons */}
           <div className="flex items-center justify-center mb-4 gap-4">
             <span
               className={`flex items-center justify-center border p-2 rounded ${
-                second_team_double_points ? "bg-green-500" : "border-[#085E9C]"
-              } ${
-                !isSecondTeamActive
-                  ? "opacity-50 cursor-not-allowed"
-                  : "cursor-pointer"
-              }`}
+                details?.second_team_double_points
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : second_team_double_points
+                  ? "bg-green-500 cursor-pointer"
+                  : "border-[#085E9C] cursor-pointer"
+              } ${!isSecondTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isSecondTeamActive &&
+                !details?.second_team_double_points &&
                 dispatch(
                   setSecondTeamDoublePoints(second_team_double_points ? 0 : 1)
                 )
@@ -198,14 +229,15 @@ const AwnserPage = () => {
             </span>
             <span
               className={`flex items-center justify-center border p-2 rounded ${
-                second_team_call ? "bg-green-500" : "border-[#085E9C]"
-              } ${
-                !isSecondTeamActive
-                  ? "opacity-50 cursor-not-allowed"
-                  : "cursor-pointer"
-              }`}
+                details?.second_team_call
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : second_team_call
+                  ? "bg-green-500 cursor-pointer"
+                  : "border-[#085E9C] cursor-pointer"
+              } ${!isSecondTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isSecondTeamActive &&
+                !details?.second_team_call &&
                 dispatch(setSecondTeamCall(second_team_call ? 0 : 1))
               }
             >
@@ -264,7 +296,7 @@ const AwnserPage = () => {
                 }`}
                 onClick={() => !loading && handleSelectTeam("first_team")}
               >
-                {game?.data?.details?.first_team_name}
+                {details?.first_team_name}
               </div>
               <div
                 className={`text-center cursor-pointer text-[#085E9C] border font-bold border-[#085E9C] rounded px-4 py-2 m-2 ${
@@ -272,7 +304,7 @@ const AwnserPage = () => {
                 }`}
                 onClick={() => !loading && handleSelectTeam("second_team")}
               >
-                {game?.data?.details?.second_team_name}
+                {details?.second_team_name}
               </div>
               <div
                 className={`text-center cursor-pointer text-[#085E9C] border font-bold border-[#085E9C] rounded px-4 py-2 m-2 ${
