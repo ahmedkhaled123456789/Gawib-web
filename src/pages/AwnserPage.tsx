@@ -23,9 +23,6 @@ const AwnserPage = () => {
   const [isReportOpen, setIsReportOpen] = useState<boolean>(false);
   const [modalEndGameOpen, setModalEndGameOpen] = useState<boolean>(false);
 
-  console.log(game);
-
-  // Redux states
   const { loading } = useSelector((state: RootState) => state.answer);
   const {
     first_team_call,
@@ -33,6 +30,11 @@ const AwnserPage = () => {
     first_team_double_points,
     second_team_double_points,
   } = useSelector((state: RootState) => state.gameFeatures);
+
+  // تحديد الفريق الحالي
+  const currentTeam = game?.data?.details?.current_team;
+  const isFirstTeamActive = currentTeam === 1;
+  const isSecondTeamActive = currentTeam === 2;
 
   const handleSelectTeam = (team: "first_team" | "second_team" | "none") => {
     if (loading) return;
@@ -57,7 +59,7 @@ const AwnserPage = () => {
         : questionPoints;
       nextTeam = 1;
     } else if (team === "none") {
-      nextTeam = nextTeam === 1 ? 2 : 1; // تغيّر الفريق
+      nextTeam = nextTeam === 1 ? 2 : 1;
     }
 
     const selectedData = {
@@ -97,7 +99,7 @@ const AwnserPage = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* زر إنهاء اللعب فوق الصفحة */}
+      {/* زر إنهاء اللعب */}
       <div className="flex justify-end gap-4 p-4 text-black">
         <button
           className="text-xl font-bold px-4 py-2 rounded-t-lg shadow-md border border-gray-300 transition-colors"
@@ -107,7 +109,7 @@ const AwnserPage = () => {
         </button>
 
         <button
-          className="text-xl font-bold  px-4 py-2 rounded-t-lg shadow-md border border-gray-300 transition-colors"
+          className="text-xl font-bold px-4 py-2 rounded-t-lg shadow-md border border-gray-300 transition-colors"
           onClick={() => setModalEndGameOpen(true)}
         >
           خروج
@@ -120,13 +122,14 @@ const AwnserPage = () => {
           <div className="bg-[#FFC629] rounded-br-2xl rounded-tr-2xl rounded-tl-2xl mx-8 mt-6 flex items-center justify-center">
             <img src="/images/logo.png" className="w-16 h-16" alt="logo" />
           </div>
+
           <div className="text-center text-[#085E9C] font-bold mt-6">
             <span>{game?.data?.details?.game_name ?? "التحدي"}</span>
             <br />
             <span>{answer?.points ?? 0} نقطة</span>
           </div>
 
-          {/* الفريق الأول */}
+          {/* First Team */}
           <div className="flex items-center justify-around text-white font-bold bg-[#085E9C] rounded py-2 m-4">
             <span>{game?.data?.details?.first_team_name}</span>
             <span className="px-2">
@@ -134,13 +137,14 @@ const AwnserPage = () => {
             </span>
           </div>
 
-          {/* أيقونات الفريق الأول */}
+          {/* First Team Icon */}
           <div className="flex items-center justify-center gap-4">
             <span
               className={`flex items-center justify-center p-2 rounded cursor-pointer ${
                 first_team_double_points ? "bg-green-500" : "bg-[#085E9C]"
-              } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+              } ${!isFirstTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
+                isFirstTeamActive &&
                 !loading &&
                 dispatch(
                   setFirstTeamDoublePoints(first_team_double_points ? 0 : 1)
@@ -149,19 +153,22 @@ const AwnserPage = () => {
             >
               <img src="/images/hand.png" className="w-12" alt="hand" />
             </span>
+
             <span
               className={`flex items-center justify-center p-2 rounded cursor-pointer ${
                 first_team_call ? "bg-green-500" : "bg-[#085E9C]"
-              } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+              } ${!isFirstTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
-                !loading && dispatch(setFirstTeamCall(first_team_call ? 0 : 1))
+                isFirstTeamActive &&
+                !loading &&
+                dispatch(setFirstTeamCall(first_team_call ? 0 : 1))
               }
             >
               <img src="/images/call.png" className="w-12" alt="call" />
             </span>
           </div>
 
-          {/* الفريق الثاني */}
+          {/* Second team */}
           <div className="flex items-center justify-around text-[#085E9C] border font-bold border-[#085E9C] rounded m-4">
             <span className="py-2">
               {game?.data?.details?.second_team_name}
@@ -170,32 +177,39 @@ const AwnserPage = () => {
               {game?.data?.details?.second_team_score}
             </span>
           </div>
-
-          {/* أيقونات الفريق الثاني */}
-          <div className="flex items-center justify-center mb-2 gap-4">
+          {/* Second team action icons */}
+          <div className="flex items-center justify-center mb-4 gap-4">
             <span
-              className={`flex items-center justify-center p-2 rounded cursor-pointer ${
-                second_team_double_points ? "bg-green-500" : "bg-[#085E9C]"
-              } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`flex items-center justify-center border p-2 rounded ${
+                second_team_double_points ? "bg-green-500" : "border-[#085E9C]"
+              } ${
+                !isSecondTeamActive
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
               onClick={() =>
-                !loading &&
+                isSecondTeamActive &&
                 dispatch(
                   setSecondTeamDoublePoints(second_team_double_points ? 0 : 1)
                 )
               }
             >
-              <img src="/images/hand.png" className="w-12" alt="hand" />
+              <img src="/images/hand.png" className="w-8 sm:w-12" alt="hand" />
             </span>
             <span
-              className={`flex items-center justify-center p-2 rounded cursor-pointer ${
-                second_team_call ? "bg-green-500" : "bg-[#085E9C]"
-              } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`flex items-center justify-center border p-2 rounded ${
+                second_team_call ? "bg-green-500" : "border-[#085E9C]"
+              } ${
+                !isSecondTeamActive
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
               onClick={() =>
-                !loading &&
+                isSecondTeamActive &&
                 dispatch(setSecondTeamCall(second_team_call ? 0 : 1))
               }
             >
-              <img src="/images/call.png" className="w-12" alt="call" />
+              <img src="/images/call.png" className="w-8 sm:w-12" alt="call" />
             </span>
           </div>
         </div>
