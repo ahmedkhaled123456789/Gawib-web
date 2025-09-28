@@ -25,18 +25,17 @@ const Header = () => {
         <nav className="hidden md:flex items-center text-black font-medium gap-6 text-lg">
           {user ? (
             <div className="flex items-center gap-6">
-              <button className="flex items-center gap-2 px-5 py-2 border border-gray-600 hover:rounded-2xl   text-black rounded-md font-semibold transition-all duration-200">
+              <button className="flex items-center gap-2 px-5 py-2 border border-gray-600 hover:rounded-2xl text-black rounded-md font-semibold transition-all duration-200">
                 <Link to="/active-game" className="flex items-center gap-2">
                   العابي <Gamepad2 size={20} />
                 </Link>
               </button>
 
               <Link to="/profile" className="flex items-center gap-2">
-                <span>
-                  {user.first_name ? `${user.first_name} ` : user.email}
-                </span>
+                <span>{user.first_name ?? user.email}</span>
                 <User2 size={24} className="cursor-pointer" />
               </Link>
+
               <button
                 onClick={handleLogout}
                 className="cursor-pointer"
@@ -56,6 +55,17 @@ const Header = () => {
             <img src="/images/logo.png" className="mx-auto h-12" alt="Logo" />
           </Link>
         </div>
+
+        {/* زر الألعاب (يظهر بس لو في user) */}
+        {user && (
+          <button className="mr-4 flex items-center gap-2 px-5 py-2 border border-gray-600 text-black rounded-md font-semibold transition-all duration-200">
+            {user.is_first_game ? (
+              <span>لعبه مجانيه</span>
+            ) : (
+              <span>لديك {user.purchased_games} لعبه</span>
+            )}
+          </button>
+        )}
 
         {/* Left: شراء | إهداء لعبة */}
         <nav className="hidden md:flex items-center text-black font-medium gap-6 text-lg">
@@ -92,9 +102,7 @@ const Header = () => {
                 className="flex items-center justify-center gap-2 text-lg"
                 onClick={() => setIsOpen(false)}
               >
-                <span>
-                  {user.first_name ? `${user.first_name} ` : user.email}
-                </span>
+                <span>{user.first_name ?? user.email}</span>
                 <User2 size={24} className="cursor-pointer" />
               </Link>
             </div>

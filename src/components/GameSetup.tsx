@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../store";
 import { createGame, firstGame } from "../store/preGameSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 interface GameSetupProps {
@@ -30,44 +30,60 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
   const user = storedUser ? JSON.parse(storedUser) : null;
 
   const handleSave = () => {
-    if (!gameName.trim() || !team1.trim() || !team2.trim()) {
-      const errors: string[] = [];
-      if (!gameName.trim()) errors.push("⚠️ اسم اللعبة مطلوب");
-      if (!team1.trim()) errors.push("⚠️ اسم الفريق الأول مطلوب");
-      if (!team2.trim()) errors.push("⚠️ اسم الفريق الثاني مطلوب");
+    const errors: string[] = [];
 
+    if (!gameName.trim()) errors.push("⚠️ اسم اللعبة مطلوب");
+    if (!team1.trim()) errors.push("⚠️ اسم الفريق الأول مطلوب");
+    if (!team2.trim()) errors.push("⚠️ اسم الفريق الثاني مطلوب");
+
+    // تحقق من أن الأسماء تحتوي على حروف عربية أو إنجليزية فقط
+    const validNameRegex = /^[\u0621-\u064A\u0660-\u0669a-zA-Z\s]+$/;
+    if (team1 && !validNameRegex.test(team1))
+      errors.push(
+        "⚠️ اسم الفريق الأول يجب أن يحتوي حروف عربية أو إنجليزية فقط"
+      );
+    if (team2 && !validNameRegex.test(team2))
+      errors.push(
+        "⚠️ اسم الفريق الثاني يجب أن يحتوي حروف عربية أو إنجليزية فقط"
+      );
+
+    if (errors.length) {
       toast.error(errors.join(" • "));
       return;
     }
 
     if (!user) {
-      toast.error("لم يتم العثور على المستخدم");
+      toast.error(
+        <div>
+          ⚠️ يجب تسجيل الدخول لبدء اللعبة —{" "}
+          <Link to="/auth" className="text-blue-500 underline">
+            اضغط هنا لتسجيل الدخول
+          </Link>
+        </div>
+      );
       return;
     }
 
-    // body الأساسي (من غير ids)
     const baseGameData = {
-      game_name: gameName,
-      first_team_name: team1,
-      second_team_name: team2,
+      game_name: gameName.trim(),
+      first_team_name: team1.trim(),
+      second_team_name: team2.trim(),
       first_team_players_count: String(score1),
       second_team_players_count: String(score2),
     };
 
-    // ✅ لو أول مرة يلعب → firstGame بس
+    // لو أول مرة يلعب → أرسل ids كمان
     if (user.is_first_game === true) {
-      dispatch(firstGame(baseGameData))
+      const gameData = { ...baseGameData, ids: selectedIds };
+      dispatch(firstGame(gameData))
         .unwrap()
         .then((res: any) => {
           console.log("✅ firstGame response:", res);
 
-          // تحديث اليوزر في localStorage
           const updatedUser = { ...user, is_first_game: true };
           localStorage.setItem("user", JSON.stringify(updatedUser));
 
           toast.success(res?.message || "تم تسجيل أول لعبة بنجاح");
-
-          // ❌ مفيش createGame هنا
           navigate("/GameBoard", { state: { game: res } });
         })
         .catch((err: any) => {
@@ -75,7 +91,6 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
           console.error("❌ firstGame error:", err);
         });
     } else {
-      // ✅ لو لعب قبل كده → على طول createGame
       createNewGame(baseGameData);
     }
   };
@@ -95,7 +110,7 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
       })
       .catch((err: any) => {
         const backendMessage =
-          err?.response?.data?.message || err?.message || "اختار ألعاب صحيحة";
+          err?.response?.data?.message || err?.message || "اختار ألعاب صحيحة ";
         toast.error(backendMessage);
         console.error("❌ Error creating game:", err);
       });

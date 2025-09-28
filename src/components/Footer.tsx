@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { getSocialLinks } from "../store/SocialLinksSlice";
 import { Link } from "react-router-dom";
-import SideMenu from "./SideMenu"; // ✅ استيراد الـ SideMenu
+import SideMenu from "./SideMenu"; 
 
 interface FooterProps {
   selectedIds?: string[];

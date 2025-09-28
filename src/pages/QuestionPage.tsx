@@ -150,7 +150,7 @@ const QuestionPage = () => {
 
         {/* Main content (center + left) */}
         <div className="flex flex-col md:flex-row border-2 border-[#085E9C] rounded w-full md:w-4/5 h-auto md:h-[600px]">
-          {/* Center */}
+          {/* Center QuestionPage */}
           <div className="w-full md:w-10/12 p-4">
             <div className="text-center w-full  rounded-br">
               <div className="border-2 border-[#848484] text-xl md:text-2xl font-bold p-0">
@@ -203,7 +203,7 @@ const QuestionPage = () => {
                   !question?.question?.image &&
                   !question?.question?.audio &&
                   !question?.question?.video &&
-                  "مفيش سؤال"}
+                  "لا يوجد سؤال"}
               </div>
             </div>
           </div>

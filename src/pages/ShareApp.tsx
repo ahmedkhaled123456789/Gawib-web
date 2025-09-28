@@ -4,8 +4,8 @@ import { MessageCircle, Facebook, X, Star } from "lucide-react";
 const ShareApp: React.FC = () => {
   const shareData = {
     title: "Jawib App",
-    text: "جرب تطبيق Jawib واستمتع بالألعاب التفاعلية 🎮",
-    url: "https://play.google.com/store/apps/details?id=com.jawib",
+    text: "جرب تطبيق Jawib واستمتع بالألعاب التفاعلية 🎮\nتحميل التطبيق:",
+    url: `Google Play: https://play.google.com/store/apps/details?id=com.jawib\nApp Store: https://apps.apple.com/app/jawib/id1234567890`
   };
 
   const handleShare = async () => {
@@ -22,20 +22,19 @@ const ShareApp: React.FC = () => {
   };
 
   const handleRate = () => {
-    // رابط التقييم، هنا مثال على Google Play، ممكن تضيف Apple Store حسب النظام
-    window.open(
-      "https://play.google.com/store/apps/details?id=com.jawib",
-      "_blank"
-    );
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const url = isIOS
+      ? "https://apps.apple.com/app/jawib/id1234567890"
+      : "https://play.google.com/store/apps/details?id=com.jawib";
+    window.open(url, "_blank");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-5">
-      {/* بطاقة المشاركة */}
-      <div className="bg-white shadow-lg rounded-2xl p-10 max-w-sm w-full flex flex-col items-center">
+      <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full flex flex-col items-center">
         <h2 className="text-[#085E9C] text-3xl font-bold mb-6">شارك التطبيق</h2>
 
-        {/* زر المشاركة الرئيسي */}
+        {/* زر المشاركة */}
         <button
           onClick={handleShare}
           className="bg-[#085E9C] text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-blue-800 transition-shadow shadow-md hover:shadow-lg mb-4 w-full flex items-center justify-center gap-2"
@@ -46,14 +45,36 @@ const ShareApp: React.FC = () => {
         {/* زر التقييم */}
         <button
           onClick={handleRate}
-          className="bg-yellow-400 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-yellow-500 transition-shadow shadow-md hover:shadow-lg w-full flex items-center justify-center gap-2"
+          className="bg-yellow-400 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-yellow-500 transition-shadow shadow-md hover:shadow-lg w-full flex items-center justify-center gap-2 mb-6"
         >
           قيمنا
           <Star size={24} className="text-white" />
         </button>
 
-        {/* روابط بديلة بأيقونات */}
-        <div className="mt-8 text-center w-full">
+        {/* أزرار التحميل */}
+        <div className="flex gap-4 mb-6">
+          <a
+            href="https://play.google.com/store/apps/details?id=com.jawib"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg shadow hover:bg-gray-200"
+          >
+            <img src="/google-play.svg" alt="Google Play" className="w-6 h-6" />
+            Google Play
+          </a>
+          <a
+            href="https://apps.apple.com/app/jawib/id1234567890"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg shadow hover:bg-gray-200"
+          >
+            <img src="/app-store.svg" alt="App Store" className="w-6 h-6" />
+            App Store
+          </a>
+        </div>
+
+        {/* روابط بديلة للمشاركة */}
+        <div className="mt-4 text-center w-full">
           <p className="text-gray-500 mb-4">أو شارك عبر:</p>
           <div className="flex gap-6 justify-center">
             {/* واتساب */}

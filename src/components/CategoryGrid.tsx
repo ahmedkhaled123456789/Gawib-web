@@ -29,7 +29,11 @@ const CategoryGrid = ({ categories, loading, error }: HeroSectionProps) => {
           >
             <div className="h-24 flex items-center justify-center mb-2">
               {cat.image ? (
-                <img src={cat.image} alt={cat.name} className="h-16 mx-auto" />
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="h-full w-full object-cover "
+                />
               ) : (
                 <div className="h-12 w-12 rounded" />
               )}

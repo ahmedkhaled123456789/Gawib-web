@@ -17,6 +17,8 @@ interface UserData {
   password: string;
   password_confirmation: string;
   current_password: string;
+  is_first_game?: boolean;
+  purchased_games?: number;
 }
 
 interface AuthState {

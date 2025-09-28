@@ -238,8 +238,7 @@ const GamePurchasePage = () => {
               className="w-full border px-3 py-2 rounded focus:outline-none"
             />
             <p className="text-sm text-red-600">
-              ملاحظة: يجب أن يكون رقم الهاتف أو البريد الإلكتروني مسجّل لدينا
-              للدخول.
+              ملاحظة: يجب أن يكون رقم الجوال أو البريد الإلكتروني مسجّل لدينا .
             </p>
           </div>
         )}

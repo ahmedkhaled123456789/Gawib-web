@@ -123,7 +123,7 @@ const AwnserPage = () => {
   return (
     <div className="flex flex-col gap-4">
       {/* زر إنهاء اللعب */}
-      <div className="flex justify-end gap-4 p-4 text-black">
+      <div className="flex justify-end gap-4 m-1 text-black">
         <button
           className="text-xl font-bold px-4 py-2 rounded-t-lg shadow-md border border-gray-300 transition-colors"
           onClick={handleEndGame}
@@ -260,29 +260,54 @@ const AwnserPage = () => {
 
         {/* Center + Left */}
         <div className="flex flex-col md:flex-row w-full md:w-4/5 border-2 border-[#085E9C] rounded items-stretch">
-          {/* Center */}
+          {/* Center AwnserPage */}
           <div className="w-full md:w-10/12 p-4">
-            <div className="text-center w-full border border-black text-black rounded">
-              <div className="text-xl py-8">
-                {answer?.answer?.text ?? "لا توجد إجابة"}
-              </div>
-            </div>
-
-            <div className="mt-4 w-full py-3 px-2 border border-black text-black rounded">
-              <div className="flex items-center justify-center w-full h-[300px]">
-                {answer?.question?.image ? (
-                  <img
-                    src={answer.question.image}
-                    className="h-full w-full object-contain rounded"
-                    alt="question"
-                  />
+            <div className="text-center w-full rounded-br">
+              <div className="border-2 border-[#848484] text-xl md:text-2xl font-bold p-0">
+                {answer?.answer?.text ? (
+                  <div className="flex justify-center items-center text-center w-full py-4">
+                    {answer.answer.text}
+                  </div>
                 ) : (
-                  <img
-                    src="/images/back2.jpg"
-                    className="h-full w-full object-cover rounded"
-                    alt="default"
+                  <div className="flex justify-center items-center text-center w-full py-4">
+                    لا توجد إجابة
+                  </div>
+                )}
+              </div>
+
+              <div className="text-3xl py-6 flex flex-col items-center gap-4 border-2 border-[#848484] min-h-[300px] mt-2">
+                <img
+                  src={answer?.question?.image || "/images/back2.jpg"}
+                  alt="answer"
+                  className="mx-auto max-h-96 w-screen object-contain rounded"
+                  loading="lazy"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      "/images/back2.jpg";
+                  }}
+                />
+
+                {answer?.answer?.audio && (
+                  <audio
+                    controls
+                    src={answer.answer.audio}
+                    className="mx-auto"
                   />
                 )}
+
+                {answer?.answer?.video && (
+                  <video
+                    controls
+                    src={answer.answer.video}
+                    className="mx-auto max-h-60"
+                  />
+                )}
+
+                {!answer?.answer?.text &&
+                  !answer?.question?.image &&
+                  !answer?.answer?.audio &&
+                  !answer?.answer?.video &&
+                  "لا توجد إجابة"}
               </div>
             </div>
           </div>

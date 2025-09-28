@@ -58,7 +58,8 @@ export const createPayment = createAsyncThunk<
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
     return thunkAPI.rejectWithValue(
-      err.response?.data.message || "createPayment failed"
+      err.response?.data.message ||
+        "يجب أن يكون رقم الجوال أو البريد الإلكتروني مسجّل لدينا"
     );
   }
 });

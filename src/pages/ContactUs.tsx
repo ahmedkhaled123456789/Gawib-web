@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../store/contactSlice";
 import type { AppDispatch, RootState } from "../store";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "sonner";
 
 const ContactUs = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -121,7 +121,6 @@ const ContactUs = () => {
           </div>
         </div>
       </form>
-       <ToastContainer  />
     </div>
   );
 };

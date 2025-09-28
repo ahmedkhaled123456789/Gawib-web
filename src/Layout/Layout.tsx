@@ -7,14 +7,23 @@ const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
+  const hiddenMenuRoutes = [
+    "/home",
+    "/Congratulations",
+    "/GameBoard",
+    "/AwnserPage",
+    "/QuestionPage",
+  ];
+
+  const shouldHideMenu = hiddenMenuRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  );
+
   return (
     <>
-      {location.pathname.startsWith("/home") ||
-      location.pathname.startsWith("/Congratulations") ? (
-        <> </> 
-      ) : (
+      {!shouldHideMenu && (
         <>
-          <div className="fixed top-12 right-4 z-50 ">
+          <div className="fixed top-12 right-4 z-50">
             <button
               onClick={() => setIsMenuOpen(true)}
               className="text-3xl font-bold text-[#085E9C]"

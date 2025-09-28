@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { AppDispatch, RootState } from "../store";
 import { getActiveGames } from "../store/activeGameSlic";
-import { Loader2, Search } from "lucide-react";
+import { Loader2, Search, ArrowUp } from "lucide-react";
 
 const ActiveGames = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,15 +14,30 @@ const ActiveGames = () => {
   );
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [showScroll, setShowScroll] = useState(false);
 
   useEffect(() => {
     dispatch(getActiveGames());
   }, [dispatch]);
 
+  // مراقبة الـ scroll لاظهار زر "اطلع لفوق"
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) setShowScroll(true);
+      else setShowScroll(false);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleNavigateToGameBoard = (selectedMatch: any, selectedGame: any) => {
     navigate("/GameBoard", {
       state: { gameData: selectedMatch, selectedGame },
     });
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (loading)
@@ -38,15 +53,12 @@ const ActiveGames = () => {
     return <div className="p-4">لا توجد ألعاب نشطة حالياً</div>;
   }
 
-  // فلترة الماتشات بالبحث
   const filteredGames = games.filter((match: any) =>
-    match.details?.game_name
-      ?.toLowerCase()
-      .includes(searchTerm.toLowerCase())
+    match.details?.game_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="p-6 flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div className="relative p-6 flex flex-col items-center justify-center min-h-screen bg-gray-50">
       {/* حقل البحث */}
       <div className="w-full max-w-md mb-8 relative">
         <input
@@ -67,7 +79,6 @@ const ActiveGames = () => {
             key={index}
             className="w-full bg-white border border-[#085E9C] rounded-2xl shadow-md p-6 mb-12"
           >
-            {/* تفاصيل الماتش */}
             {match.details && (
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-[#085E9C] mb-4">
@@ -105,12 +116,10 @@ const ActiveGames = () => {
                   className="relative cursor-pointer hover:scale-105 transform transition duration-300"
                 >
                   <div className="bg-white border border-[#085E9C] rounded-xl shadow-lg overflow-hidden pb-4 text-center w-full">
-                    {/* Tab */}
                     <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-[#F6F1EF] border border-[#085E9C] rounded-tr-3xl rounded-bl-3xl px-8 py-2 text-[#085E9C] font-bold text-sm shadow">
                       {game.questions.length} سؤال
                     </div>
 
-                    {/* الصورة */}
                     <div className="mt-10 px-4">
                       {game.image ? (
                         <img
@@ -123,7 +132,6 @@ const ActiveGames = () => {
                       )}
                     </div>
 
-                    {/* الاسم */}
                     <div
                       className="mt-6 bg-gray-100 rounded-lg mx-4 py-2 font-bold text-[#085E9C] shadow-inner"
                       title={game.name}
@@ -136,6 +144,17 @@ const ActiveGames = () => {
             </div>
           </div>
         ))
+      )}
+
+      {/* زر العودة للأعلى */}
+      {showScroll && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 bg-[#085E9C] text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition"
+          title="العودة للأعلى"
+        >
+          <ArrowUp className="w-6 h-6" />
+        </button>
       )}
     </div>
   );

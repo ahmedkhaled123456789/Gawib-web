@@ -77,7 +77,10 @@ const GameBoard = () => {
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="h-24 sm:h-32 w-full object-contain mb-4"
+                className={`h-24 sm:h-32 w-full object-contain mb-4 transition-all duration-300
+      ${
+        cat?.questions?.every((q: any) => q?.is_answered) ? "opacity-50 " : ""
+      }`}
               />
               <span className="text-sm sm:text-lg shadow-lg text-[#085E9C] border p-2 w-full rounded font-bold text-center">
                 {cat.name}
