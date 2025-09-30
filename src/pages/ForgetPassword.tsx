@@ -2,42 +2,37 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { resetPasswordEmail } from "../store/resetPassword";
-import { useNavigate } from "react-router-dom";
-import { toast , ToastContainer} from "react-toastify";
-  
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-const navigate = useNavigate();
-  const { loading, error } = useSelector((state: RootState) => state.password);
+  const { loading } = useSelector((state: RootState) => state.password);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email.trim()) {
-      toast.warn("من فضلك أدخل البريد الإلكتروني");
+      toast.error("من فضلك أدخل البريد الإلكتروني");
       return;
     }
 
     try {
       await dispatch(resetPasswordEmail({ email })).unwrap();
-      toast.success("تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني");
-      navigate("/resetPassword");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      toast.success(
+        "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني"
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error || "حدث خطأ أثناء إرسال البريد الإلكتروني");
     }
   };
-
-//   const handleSubmit = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     dispatch(resetPasswordEmail({ email }));
-// navigate("/resetPassword");
-//   };
 
   return (
     <div className="flex items-center justify-center min-h-screen py-12 px-4 sm:px-2 sm:py-2">
@@ -63,17 +58,14 @@ const navigate = useNavigate();
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 border border-[#085E9C] text-[#085E9C] rounded ${
+            className={`w-full py-2 border border-[#085E9C] text-[#085E9C] rounded flex justify-center items-center gap-2 ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {loading ? "جاري الإرسال..." : "إرسال"}
+            {loading ? <Loader2 className="animate-spin" /> : "إرسال"}
           </button>
-
-          {error && <p className="text-red-600 text-sm text-center">{error}</p>}
         </form>
       </div>
-      <ToastContainer/>
     </div>
   );
 };

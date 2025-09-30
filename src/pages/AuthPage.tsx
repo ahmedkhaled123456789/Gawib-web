@@ -195,11 +195,6 @@ const AuthPage: React.FC = () => {
           </div>
         </div>
 
-        {(authError || validationErrors.general) && (
-          <p className="text-red-500 text-sm text-center mb-4">
-            {authError || validationErrors.general}
-          </p>
-        )}
 
         {isRegister ? (
           <RegisterForm

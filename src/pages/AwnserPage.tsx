@@ -1,4 +1,4 @@
-// src/pages/AwnserPage.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
@@ -6,8 +6,8 @@ import { updateAnswer, type AnswerData } from "../store/answerSlice";
 import {
   setFirstTeamCall,
   setSecondTeamCall,
-  setFirstTeamDoublePoints,
-  setSecondTeamDoublePoints,
+  setFirstTeamTwoAnswers,
+  setSecondTeamTwoAnswers,
 } from "../store/gameFeaturesSlice";
 import { endGame } from "../store/endGameSlic";
 import { toast } from "sonner";
@@ -27,6 +27,8 @@ const AwnserPage = () => {
   const {
     first_team_call,
     second_team_call,
+    first_team_two_answers,
+    second_team_two_answers,
     first_team_double_points,
     second_team_double_points,
   } = useSelector((state: RootState) => state.gameFeatures);
@@ -46,58 +48,40 @@ const AwnserPage = () => {
       return;
     }
 
-    const questionPoints = answer?.points || 0;
-    let firstTeamScore = details.first_team_score || 0;
-    let secondTeamScore = details.second_team_score || 0;
     let nextTeam = details.current_team || 1;
-
-    // تحديث النقاط والدور
-    if (team === "first_team") {
-      firstTeamScore += first_team_double_points
-        ? questionPoints * 2
-        : questionPoints;
-      nextTeam = 2;
-    } else if (team === "second_team") {
-      secondTeamScore += second_team_double_points
-        ? questionPoints * 2
-        : questionPoints;
-      nextTeam = 1;
-    } else if (team === "none") {
-      nextTeam = nextTeam === 1 ? 2 : 1;
-    }
+    if (team === "first_team") nextTeam = 2;
+    else if (team === "second_team") nextTeam = 1;
+    else if (team === "none") nextTeam = nextTeam === 1 ? 2 : 1;
 
     const selectedData: AnswerData = {
       id: details.id,
       question_id: answer.id,
-      who_answered: 0,
+      who_answered: team === "first_team" ? 1 : team === "second_team" ? 2 : 0,
       current_team: nextTeam,
+      first_team_score: details.first_team_score,
+      second_team_score: details.second_team_score,
     };
 
-    if (team === "first_team") {
-      selectedData.who_answered = 1;
-      selectedData.first_team_score = firstTeamScore;
-    } else if (team === "second_team") {
-      selectedData.who_answered = 2;
-      selectedData.second_team_score = secondTeamScore;
-    } else {
-      selectedData.who_answered = 0;
-    }
-
-    // double/call → ابعتها بس لو لسه مش مستخدمة في الـ backend
+    // إضافة القيم إذا لم يتم إرسالها مسبقاً (حسب الـ details)
     if (first_team_double_points && !details.first_team_double_points) {
-      selectedData.first_team_double_points = 1;
+      selectedData.first_team_double_points = first_team_double_points;
     }
     if (second_team_double_points && !details.second_team_double_points) {
-      selectedData.second_team_double_points = 1;
+      selectedData.second_team_double_points = second_team_double_points;
+    }
+    if (first_team_two_answers && !details.first_team_two_answers) {
+      selectedData.first_team_two_answers = first_team_two_answers;
+    }
+    if (second_team_two_answers && !details.second_team_two_answers) {
+      selectedData.second_team_two_answers = second_team_two_answers;
     }
     if (first_team_call && !details.first_team_call) {
-      selectedData.first_team_call = 1;
+      selectedData.first_team_call = first_team_call;
     }
     if (second_team_call && !details.second_team_call) {
-      selectedData.second_team_call = 1;
+      selectedData.second_team_call = second_team_call;
     }
 
-    // إرسال البيانات
     dispatch(updateAnswer(selectedData))
       .unwrap()
       .then((res) => {
@@ -160,26 +144,26 @@ const AwnserPage = () => {
 
           {/* First Team Icons */}
           <div className="flex items-center justify-center gap-4">
+            {/* Two Answers */}
             <span
               className={`flex items-center justify-center p-2 rounded ${
-                details?.first_team_double_points
+                details?.first_team_two_answers
                   ? "bg-gray-400 cursor-not-allowed"
-                  : first_team_double_points
+                  : first_team_two_answers
                   ? "bg-green-500 cursor-pointer"
                   : "bg-[#085E9C] cursor-pointer"
               } ${!isFirstTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isFirstTeamActive &&
                 !loading &&
-                !details?.first_team_double_points &&
-                dispatch(
-                  setFirstTeamDoublePoints(first_team_double_points ? 0 : 1)
-                )
+                !details?.first_team_two_answers &&
+                dispatch(setFirstTeamTwoAnswers(first_team_two_answers ? 0 : 1))
               }
             >
-              <img src="/images/hand.png" className="w-12" alt="hand" />
+              <img src="/images/hand.png" className="w-12" alt="two-answers" />
             </span>
 
+            {/* Call */}
             <span
               className={`flex items-center justify-center p-2 rounded ${
                 details?.first_team_call
@@ -221,24 +205,31 @@ const AwnserPage = () => {
 
           {/* Second Team Icons */}
           <div className="flex items-center justify-center mb-4 gap-4">
+            {/* Two Answers */}
             <span
               className={`flex items-center justify-center border p-2 rounded ${
-                details?.second_team_double_points
+                details?.second_team_two_answers
                   ? "bg-gray-400 cursor-not-allowed"
-                  : second_team_double_points
+                  : second_team_two_answers
                   ? "bg-green-500 cursor-pointer"
                   : "border-[#085E9C] cursor-pointer"
               } ${!isSecondTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isSecondTeamActive &&
-                !details?.second_team_double_points &&
+                !details?.second_team_two_answers &&
                 dispatch(
-                  setSecondTeamDoublePoints(second_team_double_points ? 0 : 1)
+                  setSecondTeamTwoAnswers(second_team_two_answers ? 0 : 1)
                 )
               }
             >
-              <img src="/images/hand.png" className="w-8 sm:w-12" alt="hand" />
+              <img
+                src="/images/hand.png"
+                className="w-8 sm:w-12"
+                alt="two-answers"
+              />
             </span>
+
+            {/* Call */}
             <span
               className={`flex items-center justify-center border p-2 rounded ${
                 details?.second_team_call
@@ -276,38 +267,34 @@ const AwnserPage = () => {
               </div>
 
               <div className="text-3xl py-6 flex flex-col items-center gap-4 border-2 border-[#848484] min-h-[300px] mt-2">
-                <img
-                  src={answer?.question?.image || "/images/back2.jpg"}
-                  alt="answer"
-                  className="mx-auto max-h-96 w-screen object-contain rounded"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src =
-                      "/images/back2.jpg";
-                  }}
-                />
-
-                {answer?.answer?.audio && (
+                {answer?.answer?.video ? (
+                  <video
+                    controls
+                    src={answer.answer.video}
+                    className="mx-auto max-h-96 w-full object-contain rounded"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLVideoElement).src =
+                        "/images/back2.jpg"; // Fallback to an image if video fails
+                    }}
+                  />
+                ) : answer?.answer?.audio ? (
                   <audio
                     controls
                     src={answer.answer.audio}
                     className="mx-auto"
                   />
-                )}
-
-                {answer?.answer?.video && (
-                  <video
-                    controls
-                    src={answer.answer.video}
-                    className="mx-auto max-h-60"
+                ) : (
+                  <img
+                    src={answer?.answer?.image || "/images/back2.jpg"}
+                    alt="answer"
+                    className="mx-auto max-h-96 w-screen object-contain rounded"
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        "/images/back2.jpg";
+                    }}
                   />
                 )}
-
-                {!answer?.answer?.text &&
-                  !answer?.question?.image &&
-                  !answer?.answer?.audio &&
-                  !answer?.answer?.video &&
-                  "لا توجد إجابة"}
               </div>
             </div>
           </div>

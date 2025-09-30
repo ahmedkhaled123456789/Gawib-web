@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../store/contactSlice";
 import type { AppDispatch, RootState } from "../store";
 import { toast } from "sonner";
+import { getUser } from "../store/auth/authSlice";
 
 const ContactUs = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error, contact } = useSelector((state: RootState) => state.contact);
+  const { loading, error, contact } = useSelector(
+    (state: RootState) => state.contact
+  );
+
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const [form, setForm] = useState({
     first_name: "",
@@ -14,6 +19,19 @@ const ContactUs = () => {
     email: "",
     message: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      setForm({
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        email: user.email || "",
+        message: "",
+      });
+    } else {
+      dispatch(getUser()); // لو مش محمل بيانات المستخدم، نحملها
+    }
+  }, [user, dispatch]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,16 +51,17 @@ const ContactUs = () => {
     try {
       await dispatch(addContact(form)).unwrap();
       toast.success("تم إرسال رسالتك بنجاح");
-      setForm({ first_name: "", last_name: "", email: "", message: "" });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      setForm({ first_name, last_name, email, message: "" }); // نحافظ على البيانات بعد الإرسال
     } catch (err) {
-      toast.error(" حدث خطأ أثناء الإرسال");
+      toast.error("حدث خطأ أثناء الإرسال");
     }
   };
 
   return (
     <div className="min-h-screen font-Tajawal max-w-3xl mx-auto px-4 py-12 sm:py-6 sm:px-2">
-      <h2 className="text-[#085E9C] text-2xl font-bold text-center mb-10">اتصل بنا</h2>
+      <h2 className="text-[#085E9C] text-2xl font-bold text-center mb-10">
+        اتصل بنا
+      </h2>
 
       <form onSubmit={handleSubmit} className="w-full space-y-4">
         <div className="space-y-6">
@@ -52,6 +71,7 @@ const ContactUs = () => {
               name="first_name"
               value={form.first_name}
               onChange={handleChange}
+              disabled
               placeholder="الاسم الأول"
               className="border border-gray-300 rounded px-4 py-2 text-right w-full"
             />
@@ -60,6 +80,7 @@ const ContactUs = () => {
               name="last_name"
               value={form.last_name}
               onChange={handleChange}
+              disabled
               placeholder="اسم العائلة"
               className="border border-gray-300 rounded px-4 py-2 text-right w-full"
             />
@@ -68,6 +89,7 @@ const ContactUs = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
+              disabled
               placeholder="البريد الإلكتروني"
               className="border border-gray-300 rounded px-4 py-2 text-right w-full"
             />

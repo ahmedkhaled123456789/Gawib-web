@@ -1,25 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import {
   setFirstTeamDoublePoints,
   setSecondTeamDoublePoints,
 } from "../store/gameFeaturesSlice";
+import { endGame } from "../store/endGameSlic";
 
 const GameBoard = () => {
   const location = useLocation();
   const { game: gameFromSetup, updatedGame, gameData } = location.state || {};
 
-  // ✅ لو gameData موجود خده، لو مش موجود خد game أو updatedGame
   const game = gameData
     ? { data: gameData }
     : updatedGame
     ? updatedGame
     : gameFromSetup;
-
-  console.log("GameBoard game:", game);
-  console.log("GameBoard gameData:", gameData);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +33,32 @@ const GameBoard = () => {
       </div>
     );
   }
+
+  // 🔹 فحص إذا كل الأسئلة اتحلت
+  const allQuestionsAnswered = game.data.games.every((cat: any) =>
+    cat.questions.every((q: any) => q.is_answered)
+  );
+
+  // 🔹 إنهاء اللعبة أوتوماتيكياً إذا كل الأسئلة اتحلت
+  useEffect(() => {
+    if (allQuestionsAnswered && game.data.details?.game_id) {
+      dispatch(
+        endGame({
+          gameId: game.data.details.game_id,
+          payload: { status: "ended" },
+        })
+      )
+        .unwrap()
+        .then(() => navigate("/congratulations", { state: { game } }))
+        .catch((error) => console.log("خطأ أثناء إنهاء اللعبة:", error));
+    }
+  }, [
+    allQuestionsAnswered,
+    game.data.details?.game_id,
+    dispatch,
+    navigate,
+    game,
+  ]);
 
   const handleClick = (data: any) => {
     if (!data || data.is_answered) return;
@@ -78,9 +102,12 @@ const GameBoard = () => {
                 src={cat.image}
                 alt={cat.name}
                 className={`h-24 sm:h-32 w-full object-contain mb-4 transition-all duration-300
-      ${
-        cat?.questions?.every((q: any) => q?.is_answered) ? "opacity-50 " : ""
-      }`}
+                  ${
+                    cat?.questions?.every((q: any) => q?.is_answered)
+                      ? "opacity-50"
+                      : ""
+                  }
+                `}
               />
               <span className="text-sm sm:text-lg shadow-lg text-[#085E9C] border p-2 w-full rounded font-bold text-center">
                 {cat.name}

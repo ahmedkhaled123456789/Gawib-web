@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import  { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useInUpdateData } from "../hooks/useUpdateData";
 // نوع بيانات الـ state
 interface GameState {
@@ -22,7 +22,10 @@ export const endGame = createAsyncThunk<
   { rejectValue: string }
 >("endGame/endGame", async ({ gameId, payload }, thunkAPI) => {
   try {
-    const response = await useInUpdateData<any>(`show/end-game/${gameId}`, payload);
+    const response = await useInUpdateData<any>(
+      `show/end-game/${gameId}`,
+      payload
+    );
     return response.data;
   } catch (error) {
     const err = error as AxiosError;
@@ -54,4 +57,4 @@ const endGameSlice = createSlice({
   },
 });
 
-export default endGameSlice.reducer; // ← هذا سيكون endGameReducer
+export default endGameSlice.reducer;

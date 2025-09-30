@@ -18,6 +18,7 @@ export interface AnswerData {
   first_team_two_answers?: number;
   second_team_two_answers?: number;
   answer?: string;
+  
 }
 
 interface AnswerState {

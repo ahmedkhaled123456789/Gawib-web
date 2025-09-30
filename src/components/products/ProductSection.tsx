@@ -49,7 +49,10 @@ const ProductSection = ({
             key={item.id}
             {...item}
             selected={selectedIds.includes(item.id)}
-            disabled={selectedIds.length >= 6 && !selectedIds.includes(item.id)}
+            disabled={
+              (selectedIds.length >= 6 && !selectedIds.includes(item.id)) ||
+              item.game_count === 0
+            }
             onSelect={handleSelect}
           />
         ))}

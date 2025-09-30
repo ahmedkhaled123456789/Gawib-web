@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { insertData } from "../utils/api";
 
@@ -28,36 +32,37 @@ export const resetPasswordEmail = createAsyncThunk<
   string, // Return type (email string)
   Record<string, unknown>, // Input type (form data)
   { rejectValue: string }
->(
-  "auth/resetPasswordEmail",
-  async (data, thunkAPI) => {
-    try {
-      const res = await insertData<typeof data, { email: string }>("password/reset-link", data);
-      return res.email;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "Reset email failed");
-    }
+>("auth/resetPasswordEmail", async (data, thunkAPI) => {
+  try {
+    const res = await insertData<typeof data, { email: string }>(
+      "password/reset-link",
+      data
+    );
+    return res.email;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    return thunkAPI.rejectWithValue(
+      err.response?.data.message || "Reset email failed"
+    );
   }
-);
+});
 
 // ================ Reset Password ===============
 export const resetPassword = createAsyncThunk<
   UserData, // Return user data after password reset
   Record<string, unknown>,
   { rejectValue: string }
->(
-  "auth/resetPassword",
-  async (data, thunkAPI) => {
-    try {
-      const res = await insertData<typeof data, UserData>("password/reset", data);
-      return res;
-    } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      return thunkAPI.rejectWithValue(err.response?.data.message || "Password reset failed");
-    }
+>("auth/resetPassword", async (data, thunkAPI) => {
+  try {
+    const res = await insertData<typeof data, UserData>("password/reset", data);
+    return res;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    return thunkAPI.rejectWithValue(
+      err.response?.data.message || "Password reset failed"
+    );
   }
-);
+});
 
 // ================ Slice ===============
 const resetPasswordSlice = createSlice({
@@ -70,23 +75,43 @@ const resetPasswordSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // ========== Reset Email ==========
-      
-      .addCase(resetPasswordEmail.fulfilled, (state, action: PayloadAction<string>) => {
-        state.email = action.payload;
-        state.loading = false;
+      // ========== Pending ==========
+      .addCase(resetPasswordEmail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
-      
-      // ========== Reset Password ==========
-      
-      .addCase(resetPassword.fulfilled, (state, action: PayloadAction<UserData>) => {
-        state.user = action.payload;
-        state.loading = false;
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
-     
+
+      // ========== Fulfilled ==========
+      .addCase(
+        resetPasswordEmail.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.email = action.payload;
+          state.loading = false;
+        }
+      )
+      .addCase(
+        resetPassword.fulfilled,
+        (state, action: PayloadAction<UserData>) => {
+          state.user = action.payload;
+          state.loading = false;
+        }
+      )
+
+      // ========== Rejected ==========
+      .addCase(resetPasswordEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "حدث خطأ أثناء إرسال البريد الإلكتروني";
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "حدث خطأ أثناء إعادة تعيين كلمة المرور";
+      });
   },
 });
 
 export const { clearError } = resetPasswordSlice.actions;
-
 export default resetPasswordSlice.reducer;

@@ -1,25 +1,29 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { resetPassword } from "../store/resetPassword";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const ResetPasswordPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.password);
 
+  // ⬅️ جلب token و email من URL
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const emailFromUrl = searchParams.get("email") || "";
+
   const [formData, setFormData] = useState({
-    email: "",
+    email: emailFromUrl, // يجي من الـ URL
     password: "",
     password_confirmation: "",
-    token: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,13 +34,28 @@ const ResetPasswordPage = () => {
       return;
     }
 
+    if (!token) {
+      toast("الرابط غير صالح أو منتهي");
+      return;
+    }
+
     try {
-      await dispatch(resetPassword(formData)).unwrap();
-      navigate("/auth"); 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // ⬅️ إرسال البيانات مع token
+      await dispatch(
+        resetPassword({
+          token,
+          email: formData.email,
+          password: formData.password,
+          password_confirmation: formData.password_confirmation,
+        })
+      ).unwrap();
+
+      toast("تم إعادة تعيين كلمة المرور بنجاح");
+      navigate("/auth");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-     toast("خطأ في إعادة التعيين:", err);
-     }
+      toast("خطأ في إعادة التعيين: " + (err?.message || ""));
+    }
   };
 
   return (
@@ -53,16 +72,6 @@ const ResetPasswordPage = () => {
             value={formData.email}
             onChange={handleChange}
             placeholder="البريد الإلكتروني"
-            className="w-full border px-3 py-2 rounded focus:outline-none"
-            required
-          />
-
-          <input
-            type="text"
-            name="token"
-            value={formData.token}
-            onChange={handleChange}
-            placeholder="رمز التحقق (Token)"
             className="w-full border px-3 py-2 rounded focus:outline-none"
             required
           />

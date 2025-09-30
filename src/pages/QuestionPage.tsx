@@ -6,8 +6,8 @@ import type { RootState } from "../store";
 import {
   setFirstTeamCall,
   setSecondTeamCall,
-  setFirstTeamDoublePoints,
-  setSecondTeamDoublePoints,
+  setFirstTeamTwoAnswers,
+  setSecondTeamTwoAnswers,
 } from "../store/gameFeaturesSlice";
 import Timer from "../components/Timer";
 
@@ -17,11 +17,13 @@ const QuestionPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  console.log(game);
+
   const {
     first_team_call,
     second_team_call,
-    first_team_double_points,
-    second_team_double_points,
+    first_team_two_answers,
+    second_team_two_answers,
   } = useSelector((state: RootState) => state.gameFeatures);
 
   const currentTeam = game?.data?.details?.current_team; // 1 أو 2
@@ -63,23 +65,25 @@ const QuestionPage = () => {
 
           {/* First team action icons */}
           <div className="flex items-center justify-center gap-4">
-            {/* Double Points */}
+            {/* Two Answers */}
             <span
               className={`flex items-center justify-center p-2 rounded ${
-                first_team_double_points ||
-                game?.data?.details?.first_team_double_points
+                first_team_two_answers ||
+                game?.data?.details?.first_team_two_answers
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#085E9C] cursor-pointer"
               } ${!isFirstTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isFirstTeamActive &&
-                !game?.data?.details?.first_team_double_points &&
-                dispatch(
-                  setFirstTeamDoublePoints(first_team_double_points ? 0 : 1)
-                )
+                !game?.data?.details?.first_team_two_answers &&
+                dispatch(setFirstTeamTwoAnswers(first_team_two_answers ? 0 : 1))
               }
             >
-              <img src="/images/hand.png" className="w-8 sm:w-12" alt="hand" />
+              <img
+                src="/images/hand.png"
+                className="w-8 sm:w-12"
+                alt="two-answers"
+              />
             </span>
 
             {/* Call */}
@@ -111,23 +115,27 @@ const QuestionPage = () => {
 
           {/* Second team action icons */}
           <div className="flex items-center justify-center mb-4 gap-4">
-            {/* Double Points */}
+            {/* Two Answers */}
             <span
               className={`flex items-center justify-center border p-2 rounded ${
-                second_team_double_points ||
-                game?.data?.details?.second_team_double_points
+                second_team_two_answers ||
+                game?.data?.details?.second_team_two_answers
                   ? "bg-gray-400 cursor-not-allowed"
                   : "border-[#085E9C] cursor-pointer"
               } ${!isSecondTeamActive ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() =>
                 isSecondTeamActive &&
-                !game?.data?.details?.second_team_double_points &&
+                !game?.data?.details?.second_team_two_answers &&
                 dispatch(
-                  setSecondTeamDoublePoints(second_team_double_points ? 0 : 1)
+                  setSecondTeamTwoAnswers(second_team_two_answers ? 0 : 1)
                 )
               }
             >
-              <img src="/images/hand.png" className="w-8 sm:w-12" alt="hand" />
+              <img
+                src="/images/hand.png"
+                className="w-8 sm:w-12"
+                alt="two-answers"
+              />
             </span>
 
             {/* Call */}
@@ -152,7 +160,7 @@ const QuestionPage = () => {
         <div className="flex flex-col md:flex-row border-2 border-[#085E9C] rounded w-full md:w-4/5 h-auto md:h-[600px]">
           {/* Center QuestionPage */}
           <div className="w-full md:w-10/12 p-4">
-            <div className="text-center w-full  rounded-br">
+            <div className="text-center w-full rounded-br">
               <div className="border-2 border-[#848484] text-xl md:text-2xl font-bold p-0">
                 {question?.question?.text && (
                   <div className="flex justify-center items-center text-center w-full py-4">
@@ -172,38 +180,34 @@ const QuestionPage = () => {
               </div>
 
               <div className="text-3xl py-6 flex flex-col items-center gap-4 border-2 border-[#848484] min-h-[300px] mt-2">
-                <img
-                  src={question?.question?.image || "/images/back.jpg"}
-                  alt="question"
-                  className="mx-auto max-h-96 w-screen object-contain"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src =
-                      "/images/back.jpg";
-                  }}
-                />
-
-                {question?.question?.audio && (
+                {question?.question?.video ? (
+                  <video
+                    controls
+                    src={question.question.video}
+                    className="mx-auto max-h-96 w-full object-contain"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLVideoElement).src =
+                        "/images/back.jpg"; // Fallback to an image if video fails
+                    }}
+                  />
+                ) : question?.question?.audio ? (
                   <audio
                     controls
                     src={question.question.audio}
                     className="mx-auto"
                   />
-                )}
-
-                {question?.question?.video && (
-                  <video
-                    controls
-                    src={question.question.video}
-                    className="mx-auto max-h-60"
+                ) : (
+                  <img
+                    src={question?.question?.image || "/images/back.jpg"}
+                    alt="question"
+                    className="mx-auto max-h-96 w-screen object-contain"
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        "/images/back.jpg";
+                    }}
                   />
                 )}
-
-                {!question?.question?.text &&
-                  !question?.question?.image &&
-                  !question?.question?.audio &&
-                  !question?.question?.video &&
-                  "لا يوجد سؤال"}
               </div>
             </div>
           </div>

@@ -9,10 +9,13 @@ const Layout = () => {
 
   const hiddenMenuRoutes = [
     "/home",
+    "/game",
     "/Congratulations",
     "/GameBoard",
-    "/AwnserPage",
+    "/Awnser",
     "/QuestionPage",
+    "/forgetPassword",
+    "/reset-password",
   ];
 
   const shouldHideMenu = hiddenMenuRoutes.some((path) =>

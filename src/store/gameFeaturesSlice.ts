@@ -53,7 +53,14 @@ const gameFeaturesSlice = createSlice({
       state.second_team_two_answers = action.payload;
     },
 
+    // إعادة تعيين جميع الميزات
     resetGameFeatures: () => initialState,
+
+    // إعادة تعيين double points فقط
+    resetDoublePoints: (state) => {
+      state.first_team_double_points = 0;
+      state.second_team_double_points = 0;
+    },
   },
 });
 
@@ -65,6 +72,7 @@ export const {
   setFirstTeamTwoAnswers,
   setSecondTeamTwoAnswers,
   resetGameFeatures,
+  resetDoublePoints,
 } = gameFeaturesSlice.actions;
 
 export default gameFeaturesSlice.reducer;
