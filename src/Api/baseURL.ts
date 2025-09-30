@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseURL = "https://jawib.net/api/";
+export const baseURL = "https://test.jawib.net/api/";
 
 const axiosRequest = axios.create({
   baseURL,

@@ -55,8 +55,9 @@ const Routers = () => {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="game" element={<GamePurchasePage />} />
           <Route path="/payment-return" element={<PaymentPage />} />
-          <Route path="/payment-success" element={<PaymenSuccess />} />
         </Route>
+        
+        <Route path="payment-success" element={<PaymenSuccess />} />
 
         <Route path="GameBoard" element={<GameBoard />} />
         <Route path="QuestionPage" element={<QuestionPage />} />

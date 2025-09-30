@@ -210,7 +210,7 @@ const GamePurchasePage = () => {
               ستدفع الآن <span className="mr-2">{displayPrice}</span>
             </span>
             <img
-              src="/public/images/Saudi_Riyal_Symbol-1.png"
+              src="/images/Saudi_Riyal_Symbol-1.png"
               className="w-5 h-5 filter-blue"
               alt="ريال"
             />
