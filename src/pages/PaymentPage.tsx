@@ -8,7 +8,7 @@ const PaymentPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const paymentId = searchParams.get("payment_id"); // PayTabs هيرجعه في الرابط
+    const paymentId = searchParams.get("payment_id"); 
 
     if (!paymentId) {
       setMessage("فشل الدفع ❌");

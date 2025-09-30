@@ -168,7 +168,7 @@ const GamePurchasePage = () => {
                 <div className="flex items-center justify-center gap-2 m-2">
                   <span>{pkg.price}</span>
                   <img
-                    src="/public/images/Saudi_Riyal_Symbol-1.png"
+                    src="/images/Saudi_Riyal_Symbol-1.png"
                     className={`w-5 h-5 ${
                       selectedPackage?.id === pkg.id
                         ? "filter-blue"

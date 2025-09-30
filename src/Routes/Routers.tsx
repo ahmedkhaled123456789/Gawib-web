@@ -48,10 +48,7 @@ const Routers = () => {
           path="forgetPassword"
           element={token ? <Navigate to="/home" /> : <ForgetPassword />}
         />
-        <Route
-          path="reset-password"
-          element={token ? <Navigate to="/home" /> : <ResetPasswordPage />}
-        />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
 
         {/* Protected Route  */}
         <Route element={<ProtectedRoute />}>
