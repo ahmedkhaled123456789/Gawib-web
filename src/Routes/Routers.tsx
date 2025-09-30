@@ -55,7 +55,7 @@ const Routers = () => {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="game" element={<GamePurchasePage />} />
           <Route path="/payment-return" element={<PaymentPage />} />
-          <Route path="/api/:id/return" element={<PaymenSuccess />} />
+          <Route path="/payment-success" element={<PaymenSuccess />} />
         </Route>
 
         <Route path="GameBoard" element={<GameBoard />} />
