@@ -107,13 +107,23 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
         console.log("✅ Game created successfully:", res);
         toast.success(res?.message || "تم إنشاء اللعبة بنجاح");
         navigate("/GameBoard", { state: { game: res } });
-      })
-      .catch((err: any) => {
-        const backendMessage =
-          err?.response?.data?.message || err?.message || "اختار ألعاب صحيحة 6 العاب";
-        toast.error(backendMessage);
-        console.error("❌ Error creating game:", err);
-      });
+   }).catch((err: any) => {
+  const backendMessage =
+    err?.response?.data?.message || err?.message || "اختار ألعاب صحيحة، إذا ما كان العدد كافي اشتري الألعاب";
+  
+  toast.error(
+    <div>
+      {backendMessage} <br />
+      <Link to="/game" style={{ color: "#4ea8de", textDecoration: "underline" }}>
+        اشتري الألعاب
+      </Link>
+    </div>
+  );
+
+  console.error("❌ Error creating game:", err);
+});
+
+
   };
 
   return (
