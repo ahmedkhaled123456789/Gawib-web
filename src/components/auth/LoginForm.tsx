@@ -82,32 +82,29 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 setForm((prevForm) => ({
                   ...prevForm,
                   phone_number: `+${value}`,
-                  nationality: country?.name?.toUpperCase() || "", // 👈 هنا بنسجل الجنسية
+                  nationality: country?.name?.toUpperCase() || "",
                 }))
               }
               inputProps={{
                 name: "phone_number",
-                dir: "ltr", // 👈 مهم علشان الرقم يبان صح
+                dir: "ltr", // الرقم يكتب LTR
               }}
               containerStyle={{
-                direction: "ltr", // 👈 خليه LTR مش RTL
+                direction: "ltr", // مهم عشان العلم يبان شمال
                 width: "100%",
-                position: "relative",
               }}
               inputStyle={{
                 width: "100%",
-                textAlign: "right", // 👈 كده الرقم هيظهر صح ومحاذي يمين
+                textAlign: "right", // الرقم يبقى يمين
                 borderRadius: "6px",
-                paddingRight: "50px",
-                padding: "20px 10px",
+                paddingRight: "10px", // للمسافة يمين
+                paddingLeft: "52px", // ✅ نحجز مكان للعلم + الكود شمال
+                height: "44px",
                 borderColor: validationErrors.phone_number ? "#ef4444" : "",
               }}
               buttonStyle={{
                 backgroundColor: "transparent",
                 border: "none",
-                position: "absolute",
-                left: "0",
-                right: "auto",
               }}
             />
 

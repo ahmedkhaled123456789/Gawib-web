@@ -67,7 +67,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 src={imgError ? "" : image}
                 alt={name}
                 onError={() => setImgError(true)}
-                className="w-full h-28 object-cover"
+                className="w-full h-36 object-cover"
               />
             ) : (
               <div className="w-full h-28"></div>

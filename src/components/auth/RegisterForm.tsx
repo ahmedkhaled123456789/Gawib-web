@@ -98,29 +98,28 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             inputProps={{
               name: "phone_number",
               className: validationErrors.phone_number ? "border-red-500" : "",
-              dir: "ltr", // 👈 خليه LTR
+              dir: "ltr",
             }}
             containerStyle={{
               width: "100%",
-              position: "relative",
-              direction: "ltr", // 👈 مهم
+              direction: "ltr",
             }}
             inputStyle={{
               width: "100%",
-              textAlign: "right", // 👈 النص لليمين
+              textAlign: "left", // الأرقام تبدأ من الشمال
               borderRadius: "6px",
-              paddingRight: "50px",
-              padding: "20px 10px",
+              paddingLeft: "48px", // ✅ مساحة للعلم وكود الدولة
+              paddingRight: "10px",
+              height: "42px",
               borderColor: validationErrors.phone_number ? "#ef4444" : "",
             }}
             buttonStyle={{
               backgroundColor: "transparent",
               border: "none",
-              position: "absolute",
               left: "0",
-              right: "auto",
             }}
           />
+
           {validationErrors.phone_number && (
             <p className="text-red-500 text-xs text-right mt-1">
               {validationErrors.phone_number}
