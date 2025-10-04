@@ -16,6 +16,7 @@ export type AuthFormData = Record<string, string> & {
   phone_number: string;
   password: string;
   password_confirmation: string;
+  nationality?: string;
 };
 
 export interface ValidationErrors {
@@ -48,6 +49,7 @@ const AuthPage: React.FC = () => {
     phone_number: "",
     password: "",
     password_confirmation: "",
+    nationality: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +160,7 @@ const AuthPage: React.FC = () => {
 
     const result = await dispatch(signupUser(form));
     if (signupUser.fulfilled.match(result)) {
-      toast.success("تم إنشاء الحساب بنجاح، برجاء تسجيل الدخول"); 
+      toast.success("تم إنشاء الحساب بنجاح، برجاء تسجيل الدخول");
       setIsRegister(false);
     }
   };
@@ -194,7 +196,6 @@ const AuthPage: React.FC = () => {
             </button>
           </div>
         </div>
-
 
         {isRegister ? (
           <RegisterForm

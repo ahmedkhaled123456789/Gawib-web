@@ -1,26 +1,11 @@
+import React from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import type { ValidationErrors } from "../../pages/AuthPage";
+import type { ValidationErrors, AuthFormData } from "../../pages/AuthPage";
 
 interface RegisterFormProps {
-  form: {
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone_number: string;
-    password: string;
-    password_confirmation: string;
-  };
-  setForm: React.Dispatch<
-    React.SetStateAction<{
-      first_name: string;
-      last_name: string;
-      email: string;
-      phone_number: string;
-      password: string;
-      password_confirmation: string;
-    }>
-  >;
+  form: AuthFormData;
+  setForm: React.Dispatch<React.SetStateAction<AuthFormData>>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   passwordsMatch: boolean;
   handleRegister: () => void;
@@ -90,38 +75,39 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             value={form.email}
             onChange={handleChange}
           />
-          {/* {validationErrors.email && (
+          {validationErrors.email && (
             <p className="text-red-500 text-xs text-right mt-1">
               {validationErrors.email}
             </p>
-          )} */}
+          )}
         </div>
 
-        {/* رقم الجوال */}
+        {/* رقم الجوال + الجنسية */}
         <div>
           <PhoneInput
-            country={"eg"}
+            country={"sa"}
             enableSearch
             value={form.phone_number.replace("+", "")}
-            onChange={(value: string) =>
+            onChange={(value: string, country: any) =>
               setForm((prevForm) => ({
                 ...prevForm,
                 phone_number: `+${value}`,
+                nationality: country?.name?.toUpperCase() || "",
               }))
             }
             inputProps={{
-              dir: "rtl",
               name: "phone_number",
               className: validationErrors.phone_number ? "border-red-500" : "",
+              dir: "ltr", // 👈 خليه LTR
             }}
             containerStyle={{
-              direction: "rtl",
               width: "100%",
               position: "relative",
+              direction: "ltr", // 👈 مهم
             }}
             inputStyle={{
               width: "100%",
-              textAlign: "right",
+              textAlign: "right", // 👈 النص لليمين
               borderRadius: "6px",
               paddingRight: "50px",
               padding: "20px 10px",
