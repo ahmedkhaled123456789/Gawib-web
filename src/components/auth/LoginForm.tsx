@@ -85,27 +85,31 @@ const LoginForm: React.FC<LoginFormProps> = ({
                   nationality: country?.name?.toUpperCase() || "",
                 }))
               }
-              inputProps={{
-                name: "phone_number",
-                dir: "ltr", // الرقم يكتب LTR
-              }}
-              containerStyle={{
-                direction: "ltr", // مهم عشان العلم يبان شمال
-                width: "100%",
-              }}
-              inputStyle={{
-                width: "100%",
-                textAlign: "right", // الرقم يبقى يمين
-                borderRadius: "6px",
-                paddingRight: "10px", // للمسافة يمين
-                paddingLeft: "52px", // ✅ نحجز مكان للعلم + الكود شمال
-                height: "44px",
-                borderColor: validationErrors.phone_number ? "#ef4444" : "",
-              }}
-              buttonStyle={{
-                backgroundColor: "transparent",
-                border: "none",
-              }}
+            inputProps={{
+              name: "phone_number",
+              className: validationErrors.phone_number ? "border-red-500" : "",
+              dir: "ltr",
+            }}
+            containerStyle={{
+              width: "100%",
+              direction: "ltr",
+            }}
+            inputStyle={{
+              width: "100%",
+              textAlign: "left", // الأرقام تبدأ من الشمال
+              borderRadius: "6px",
+              paddingLeft: "48px", // ✅ مساحة للعلم وكود الدولة
+              paddingRight: "10px",
+              height: "42px",
+              borderColor: validationErrors.phone_number ? "#ef4444" : "",
+              border: "1px solid #d1d5db",
+              boxShadow: "none",
+            }}
+            buttonStyle={{
+              backgroundColor: "transparent",
+              border: "none",
+              left: "0",
+            }}
             />
 
             {validationErrors.phone_number && (

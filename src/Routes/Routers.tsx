@@ -25,6 +25,7 @@ const SocialMedia = lazy(() => import("../pages/SocialMedia"));
 const DealPage = lazy(() => import("../pages/DealPage"));
 const ResetPasswordPage = lazy(() => import("../pages/ResetPasswordPage"));
 const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
+const AddQuestions = lazy(() => import("../pages/AddQuestions"));
 
 const Routers = () => {
   const token = localStorage.getItem("accessToken");
@@ -55,6 +56,7 @@ const Routers = () => {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="game" element={<GamePurchasePage />} />
           <Route path="/payment-return" element={<PaymentPage />} />
+          <Route path="/add-questions" element={<AddQuestions />} />
         </Route>
         
         <Route path="payment-success" element={<PaymenSuccess />} />

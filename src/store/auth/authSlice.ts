@@ -14,11 +14,12 @@ interface UserData {
   last_name: string;
   email: string;
   phone_number: string;
-  password: string;
-  password_confirmation: string;
-  current_password: string;
+  password?: string;
+  password_confirmation?: string;
+  current_password?: string;
   is_first_game?: boolean;
   purchased_games?: number;
+  nationality?: string;
 }
 
 interface AuthState {
@@ -38,14 +39,11 @@ const initialState: AuthState = {
   loading: false,
   error: null,
 };
+
 interface UpdateUserResponse {
   message: string;
   data: UserData;
 }
-
-// interface UpdateUserArgs {
-//   data: Partial<UserData>;
-// }
 
 // ================= Login =================
 export const loginUser = createAsyncThunk<
@@ -103,6 +101,7 @@ export const getUser = createAsyncThunk<
     );
   }
 });
+
 // ================= updateUser =================
 export const updateUser = createAsyncThunk<
   UpdateUserResponse,
@@ -154,7 +153,9 @@ const authSlice = createSlice({
       .addCase(
         loginUser.fulfilled,
         (state, action: PayloadAction<UserData>) => {
-          state.user = action.payload;
+          const userInfo = action.payload.data?.authenticatable;
+
+          state.user = userInfo || null;
           state.loading = false;
           state.error = null;
 
@@ -172,7 +173,6 @@ const authSlice = createSlice({
             localStorage.setItem("refreshToken", refresh.token);
           }
 
-          const userInfo = action.payload.data?.authenticatable;
           if (userInfo) {
             localStorage.setItem("user", JSON.stringify(userInfo));
           }
@@ -191,7 +191,9 @@ const authSlice = createSlice({
       .addCase(
         signupUser.fulfilled,
         (state, action: PayloadAction<UserData>) => {
-          state.user = action.payload;
+          const userInfo = action.payload.data?.authenticatable;
+
+          state.user = userInfo || null;
           state.loading = false;
           state.error = null;
 
@@ -209,7 +211,6 @@ const authSlice = createSlice({
             localStorage.setItem("refreshToken", refresh.token);
           }
 
-          const userInfo = action.payload.data?.authenticatable;
           if (userInfo) {
             localStorage.setItem("user", JSON.stringify(userInfo));
           }
@@ -229,6 +230,7 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.loading = false;
         state.error = null;
+        localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
@@ -236,7 +238,6 @@ const authSlice = createSlice({
       })
 
       // Update User
-
       .addCase(
         updateUser.fulfilled,
         (state, action: PayloadAction<UpdateUserResponse>) => {

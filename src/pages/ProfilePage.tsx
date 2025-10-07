@@ -5,11 +5,19 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { getUser, updateUser } from "../store/auth/authSlice";
 import { toast } from "sonner";
-import { Eye, EyeOff } from "lucide-react";
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Loader2,
+  Plus,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user, loading } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const [tab, setTab] = useState("account");
   const [form, setForm] = useState({
@@ -22,18 +30,17 @@ const ProfilePage = () => {
     password_confirmation: "",
   });
 
-  // حالات إظهار كلمة المرور
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     useState(false);
 
-  // تحميل بيانات المستخدم
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
 
-  // تحديث الفورم أول ما ييجي user
   useEffect(() => {
     if (user?.data) {
       setForm((prev) => ({
@@ -54,7 +61,6 @@ const ProfilePage = () => {
     setForm({ ...form, phone_number: value });
   };
 
-  // تحديث بيانات الحساب فقط
   const handleAccountSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -66,20 +72,21 @@ const ProfilePage = () => {
           phone_number: form.phone_number,
         })
       ).unwrap();
-      console.log(res);
       toast.success(res.message || "✅ تم تحديث البيانات بنجاح!");
     } catch (err: any) {
       toast.error(err);
     }
   };
 
-  // تحديث كلمة المرور فقط
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (form.password !== form.password_confirmation) {
       toast.error("❌ كلمة المرور غير متطابقة");
       return;
     }
+
+    setIsLoading(true);
     try {
       const res = await dispatch(
         updateUser({
@@ -88,30 +95,48 @@ const ProfilePage = () => {
           password_confirmation: form.password_confirmation,
         })
       ).unwrap();
-      console.log(res);
       toast.success(res.message);
     } catch (err: any) {
       toast.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const passwordsMatch =
     form.password === form.password_confirmation || tab === "account";
 
-
-  if (loading) {
-    return <p className="text-center mt-10">جاري تحميل البيانات...</p>;
-  }
-
   return (
     <div
       dir="rtl"
-      className="flex items-center justify-center min-h-screen py-12 px-4 sm:px-2 sm:py-2"
+      className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-2 sm:py-2"
     >
-      <div className="max-w-md mx-auto p-4 bg-white rounded-md shadow text-right w-full">
+
+      {/* زر العودة خارج الكارد */}
+      <div className="w-full max-w-lg mb-4 flex justify-start">
+        <button
+          onClick={() => navigate("/home")}
+          className="flex items-center gap-2 text-blue-600 hover:underline"
+        >
+          <ArrowLeft size={20} />
+          رجوع
+        </button>
+      </div>
+      {/* الكارد */}
+      <div className="max-w-lg w-full p-4 bg-white rounded-md shadow text-right">
         <h2 className="text-center text-xl font-bold text-[#085E9C] mb-4">
           الملف الشخصي
         </h2>
+
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => navigate("/add-questions")}
+            className="flex items-center gap-2 px-5 py-2.5 border border-[#064c80] text-[#064c80] bg-white rounded-lg font-medium shadow-sm hover:bg-[#064c80] hover:text-white hover:shadow-md transition-all duration-300 ease-in-out"
+          >
+            <Plus size={20} />
+            إضافة سؤال
+          </button>
+        </div>
 
         {/* Tabs */}
         <div className="flex justify-center mb-6">
@@ -171,27 +196,34 @@ const ProfilePage = () => {
             />
 
             <PhoneInput
-              country={"sa"} // علم السعوديةa
+              country={"sa"}
               value={form.phone_number}
               onChange={handlePhoneChange}
               enableSearch
               inputProps={{
-                dir: "rtl",
+                name: "phone_number",
+                className: "border-red-500",
+                dir: "ltr",
               }}
-              containerStyle={{ direction: "rtl" }}
+              containerStyle={{
+                width: "100%",
+                direction: "ltr",
+              }}
               inputStyle={{
                 width: "100%",
-                textAlign: "right",
+                textAlign: "left",
                 borderRadius: "6px",
-                paddingRight: "50px",
-                padding: "20px 10px ",
+                paddingLeft: "48px",
+                paddingRight: "10px",
+                height: "42px",
+                borderColor: "#ef4444",
+                border: "1px solid #d1d5db",
+                boxShadow: "none",
               }}
               buttonStyle={{
                 backgroundColor: "transparent",
                 border: "none",
-                position: "absolute",
                 left: "0",
-                right: "auto",
               }}
             />
 
@@ -279,15 +311,14 @@ const ProfilePage = () => {
               <p className="text-red-500 text-sm">كلمة المرور غير متطابقة</p>
             )}
 
-            {/* عرض زر تغيير كلمة المرور فقط إذا كان هناك بيانات مدخلة */}
-            
-              <button
-                type="submit"
-                className="w-full py-2 border border-[#085E9C] text-[#085E9C] rounded hover:bg-[#085E9C] hover:text-white transition"
-              >
-                تغيير كلمة المرور
-              </button>
-            
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-2 flex justify-center items-center gap-2 border border-[#085E9C] text-[#085E9C] rounded hover:bg-[#085E9C] hover:text-white transition disabled:opacity-50"
+            >
+              {isLoading && <Loader2 className="animate-spin w-4 h-4" />}
+              تغيير كلمة المرور
+            </button>
           </form>
         )}
       </div>

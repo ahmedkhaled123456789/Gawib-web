@@ -64,6 +64,7 @@ const GamePurchasePage = () => {
     if (discount?.final_amount === 0) {
       const freePaymentData = {
         package_id: selectedPackage.id,
+
         receiver_email: activeTab === "gift" ? email || undefined : undefined,
         receiver_phone:
           activeTab === "gift" && phone
@@ -87,6 +88,8 @@ const GamePurchasePage = () => {
     const paymentData = {
       package_id: selectedPackage.id,
       amount: displayPrice,
+      tax_amount: 0, //tex_amount
+
       receiver_email: activeTab === "gift" ? email || undefined : undefined,
       receiver_phone:
         activeTab === "gift" && phone

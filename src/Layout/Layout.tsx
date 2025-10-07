@@ -16,6 +16,7 @@ const Layout = () => {
     "/QuestionPage",
     "/forgetPassword",
     "/reset-password",
+    "/auth",
   ];
 
   const shouldHideMenu = hiddenMenuRoutes.some((path) =>

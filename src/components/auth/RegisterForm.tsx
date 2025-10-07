@@ -112,6 +112,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               paddingRight: "10px",
               height: "42px",
               borderColor: validationErrors.phone_number ? "#ef4444" : "",
+              border: "1px solid #d1d5db",
+              boxShadow: "none",
             }}
             buttonStyle={{
               backgroundColor: "transparent",
