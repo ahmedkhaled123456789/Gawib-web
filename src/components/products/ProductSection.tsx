@@ -16,6 +16,7 @@ interface ProductSectionProps {
   setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>;
   title: string;
   items: Item[];
+  isFirstGame?: boolean; // 👈 إضافة جديدة
 }
 
 const ProductSection = ({
@@ -23,8 +24,10 @@ const ProductSection = ({
   setSelectedIds,
   title,
   items,
+  isFirstGame,
 }: ProductSectionProps) => {
   const handleSelect = (id: string) => {
+    if (isFirstGame) return; // 👈 لا تسمح بالاختيار لو أول لعبة
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter((sid) => sid !== id));
     } else if (selectedIds.length < 6) {
@@ -50,6 +53,7 @@ const ProductSection = ({
             {...item}
             selected={selectedIds.includes(item.id)}
             disabled={
+              isFirstGame || // 👈 الكل disabled لو أول لعبة
               (selectedIds.length >= 6 && !selectedIds.includes(item.id)) ||
               item.game_count === 0
             }

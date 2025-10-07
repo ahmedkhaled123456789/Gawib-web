@@ -13,6 +13,8 @@ const GameBoard = () => {
   const location = useLocation();
   const { game: gameFromSetup, updatedGame, gameData } = location.state || {};
 
+  console.log("gameFromSetup", gameFromSetup);
+
   const game = gameData
     ? { data: gameData }
     : updatedGame
@@ -73,7 +75,7 @@ const GameBoard = () => {
         {game.data.games.map((cat: any) => (
           <div key={cat.id} className="flex items-center justify-center">
             {/* Left buttons */}
-            <div className="flex flex-col-reverse gap-2 h-full">
+            <div className="flex flex-col gap-2 h-full">
               {Array(3)
                 .fill(null)
                 .map((_, idx) => {
@@ -109,7 +111,7 @@ const GameBoard = () => {
                   }
                 `}
               />
-              <span className="text-sm sm:text-lg shadow-lg text-[#085E9C] border p-2 w-full rounded font-bold text-center">
+              <span className="text-sm sm:text-lg  text-[#085E9C]  w-full  font-bold text-center">
                 {cat.name}
               </span>
             </div>

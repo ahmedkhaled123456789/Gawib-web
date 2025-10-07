@@ -25,7 +25,7 @@ const CategoryGrid = ({ categories, loading, error }: HeroSectionProps) => {
           <div
             key={cat.id}
             onClick={() => handleCategoryClick(cat.id)}
-            className="bg-white cursor-pointer border border-black shadow text-center hover:bg-blue-50 transition"
+            className="bg-white cursor-pointer border  border-black shadow text-center hover:bg-blue-50 transition"
           >
             <div className="h-24 flex items-center justify-center mb-2">
               {cat.image ? (

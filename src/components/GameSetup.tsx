@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 interface GameSetupProps {
   selectedIds: string[];
+  user: any;
 }
 
 const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {

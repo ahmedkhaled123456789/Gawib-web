@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MoveLeft, MoveRight } from "lucide-react";
+// import { MoveLeft, MoveRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store";
@@ -163,12 +163,12 @@ const QuestionPage = () => {
             <div className="text-center w-full rounded-br">
               <div className="border-2 border-[#848484] text-xl md:text-2xl font-bold p-0">
                 {question?.question?.text && (
-                  <div className="flex justify-center items-center text-center w-full py-4">
+                  <div className="flex justify-center items-center text-center w-full py-11">
                     {question.question.text}
                   </div>
                 )}
 
-                {question?.hint && (
+                {/* {question?.hint && (
                   <div className="flex items-center justify-end gap-x-2">
                     <div className="flex items-center gap-2 text-[#085E9C] py-2 px-3 border border-black border-l-0 border-b-0 rounded-tr">
                       <MoveRight />
@@ -176,7 +176,7 @@ const QuestionPage = () => {
                       <MoveLeft />
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
 
               <div className="text-3xl py-6 flex flex-col items-center gap-4 border-2 border-[#848484] min-h-[300px] mt-2">

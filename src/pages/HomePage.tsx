@@ -13,6 +13,10 @@ const HomePage = () => {
   const { categories, loading, error } = useSelector(
     (state: RootState) => state.category
   );
+
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -38,6 +42,7 @@ const HomePage = () => {
               setSelectedIds={setSelectedIds}
               title={cat.name}
               items={cat.games ?? []}
+              isFirstGame={user?.is_first_game} // 👈 نضيف دا
             />
           </div>
         ))}
@@ -46,7 +51,7 @@ const HomePage = () => {
         <div className="mt-4 text-sm text-gray-700">
           المختارة: {selectedIds.join(", ") || "لا يوجد"}
         </div>
-        <GameSetup selectedIds={selectedIds} />
+        <GameSetup selectedIds={selectedIds} user={user} />
         {/* Footer */}
         <Footer
           selectedIds={selectedIds}
