@@ -163,7 +163,7 @@ const QuestionPage = () => {
             <div className="text-center w-full rounded-br">
               <div className="border-2 border-[#848484] text-xl md:text-2xl font-bold p-0">
                 {question?.question?.text && (
-                  <div className="flex justify-center items-center text-center w-full py-11">
+                  <div className="flex justify-center items-center text-center w-full py-4 px-4 whitespace-normal break-words">
                     {question.question.text}
                   </div>
                 )}

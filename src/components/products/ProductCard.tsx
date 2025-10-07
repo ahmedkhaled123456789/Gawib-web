@@ -76,7 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
           <div className="border-t border-black mt-8"></div>
           <div
-            className="mt-2 rounded-lg mx-4 py-2 font-bold text-[#085E9C] "
+            className="mt-0 rounded-lg mx-4 py-2 font-bold text-[#085E9C] "
             title={name}
           >
             {name}

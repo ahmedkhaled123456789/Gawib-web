@@ -80,24 +80,28 @@ const GameBoard = () => {
                 .fill(null)
                 .map((_, idx) => {
                   const val = cat?.questions?.[idx + 3];
+                  const isLast = idx === 2;
+                  const pointsArray = [200, 400, 600]; // القيم المطلوبة
+
                   return (
                     <button
                       key={`left-${idx}`}
-                      className={`w-16 sm:w-20 h-16 rounded rounded-br-xl rounded-tl-xl text-xs sm:text-sm font-bold
-                        ${
-                          val?.is_answered
-                            ? "bg-gray-200 text-[#085E9C] cursor-not-allowed"
-                            : "bg-[#085E9C] text-white hover:bg-blue-700"
-                        }`}
+                      className={`w-16 sm:w-20 h-16 text-xs sm:text-sm font-bold
+            ${
+              val?.is_answered
+                ? "bg-gray-200 text-[#085E9C] cursor-not-allowed"
+                : "bg-[#085E9C] text-white hover:bg-blue-700"
+            }
+            ${isLast ? "rounded-tr-xl " : "rounded rounded-br-xl rounded-tl-xl"}
+          `}
                       onClick={() => handleClick(val)}
                       disabled={val?.is_answered}
                     >
-                      {val?.is_answered ? val?.points : val?.points ?? "-"}
+                      {val?.is_answered ? val?.points : pointsArray[idx]}
                     </button>
                   );
                 })}
             </div>
-
             {/* Center Category Card */}
             <div className="flex flex-col items-center justify-center border rounded-md border-[#085E9C] w-full h-full p-2 bg-white">
               <img
@@ -122,19 +126,24 @@ const GameBoard = () => {
                 .fill(null)
                 .map((_, idx) => {
                   const val = cat?.questions?.[idx];
+                  const isLast = idx === 2;
+                  const pointsArray = [200, 400, 600]; // نفس القيم
+
                   return (
                     <button
                       key={`right-${idx}`}
-                      className={`w-16 sm:w-20 h-16 rounded rounded-bl-xl rounded-tr-xl text-xs sm:text-sm font-bold
-                        ${
-                          val?.is_answered
-                            ? "bg-gray-200 text-[#085E9C] cursor-not-allowed"
-                            : "bg-[#085E9C] text-white hover:bg-blue-700"
-                        }`}
+                      className={`w-16 sm:w-20 h-16 text-xs sm:text-sm font-bold
+            ${
+              val?.is_answered
+                ? "bg-gray-200 text-[#085E9C] cursor-not-allowed"
+                : "bg-[#085E9C] text-white hover:bg-blue-700"
+            }
+            ${isLast ? "rounded-tl-xl " : "rounded rounded-bl-xl rounded-tr-xl"}
+          `}
                       onClick={() => handleClick(val)}
                       disabled={val?.is_answered}
                     >
-                      {val?.is_answered ? val?.points : val?.points ?? "-"}
+                      {val?.is_answered ? val?.points : pointsArray[idx]}
                     </button>
                   );
                 })}

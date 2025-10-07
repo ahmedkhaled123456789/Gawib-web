@@ -41,12 +41,20 @@ const ProductSection = ({
         <div className="bg-[#085E9C] border-l border-b border-[#085E9C] rounded-br text-[#FFC629] px-4 py-2 w-fit mb-2">
           {title}
         </div>
-        <div className="border-l border-b border-[#085E9C] rounded-bl px-2 py-2 text-[#085E9C] w-fit mb-2">
+        <button
+          onClick={() => {
+            const section = document.querySelector("section");
+            if (section) {
+              section.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+          className="border-l border-b border-[#085E9C] rounded-bl px-2 py-2 text-[#085E9C] w-fit mb-2 hover:bg-blue-50 transition"
+        >
           <ArrowUp />
-        </div>
+        </button>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
         {items.map((item: any) => (
           <ProductCard
             key={item.id}
