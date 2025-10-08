@@ -9,18 +9,18 @@ const ShareApp: React.FC = () => {
     url: `Google Play: https://play.google.com/store/apps/details?id=com.jawib\nApp Store: https://apps.apple.com/app/jawib/id1234567890`,
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        console.log("تمت المشاركة بنجاح");
-      } catch (err) {
-        console.error("فشل في المشاركة:", err);
-      }
-    } else {
-      alert("ميزة المشاركة غير مدعومة على هذا المتصفح 🚫");
-    }
-  };
+  // const handleShare = async () => {
+  //   if (navigator.share) {
+  //     try {
+  //       await navigator.share(shareData);
+  //       console.log("تمت المشاركة بنجاح");
+  //     } catch (err) {
+  //       console.error("فشل في المشاركة:", err);
+  //     }
+  //   } else {
+  //     alert("ميزة المشاركة غير مدعومة على هذا المتصفح 🚫");
+  //   }
+  // };
 
   const handleRate = () => {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
