@@ -13,7 +13,7 @@ const GameBoard = () => {
   const location = useLocation();
   const { game: gameFromSetup, updatedGame, gameData } = location.state || {};
 
-  console.log("gameFromSetup", gameFromSetup);
+  // console.log("gameFromSetup", gameFromSetup);
 
   const game = gameData
     ? { data: gameData }

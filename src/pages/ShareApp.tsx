@@ -1,11 +1,12 @@
 import React from "react";
 import { MessageCircle, Facebook, X, Star } from "lucide-react";
+import { FaGooglePlay, FaAppStore } from "react-icons/fa";
 
 const ShareApp: React.FC = () => {
   const shareData = {
     title: "Jawib App",
     text: "جرب تطبيق Jawib واستمتع بالألعاب التفاعلية 🎮\nتحميل التطبيق:",
-    url: `Google Play: https://play.google.com/store/apps/details?id=com.jawib\nApp Store: https://apps.apple.com/app/jawib/id1234567890`
+    url: `Google Play: https://play.google.com/store/apps/details?id=com.jawib\nApp Store: https://apps.apple.com/app/jawib/id1234567890`,
   };
 
   const handleShare = async () => {
@@ -34,13 +35,6 @@ const ShareApp: React.FC = () => {
       <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full flex flex-col items-center">
         <h2 className="text-[#085E9C] text-3xl font-bold mb-6">شارك التطبيق</h2>
 
-        {/* زر المشاركة */}
-        <button
-          onClick={handleShare}
-          className="bg-[#085E9C] text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-blue-800 transition-shadow shadow-md hover:shadow-lg mb-4 w-full flex items-center justify-center gap-2"
-        >
-          شارك الآن
-        </button>
 
         {/* زر التقييم */}
         <button
@@ -59,7 +53,7 @@ const ShareApp: React.FC = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg shadow hover:bg-gray-200"
           >
-            <img src="/google-play.svg" alt="Google Play" className="w-6 h-6" />
+            <FaGooglePlay size={24} className="text-green-700" />
             Google Play
           </a>
           <a
@@ -68,7 +62,7 @@ const ShareApp: React.FC = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg shadow hover:bg-gray-200"
           >
-            <img src="/app-store.svg" alt="App Store" className="w-6 h-6" />
+            <FaAppStore size={24} className="text-black" />
             App Store
           </a>
         </div>

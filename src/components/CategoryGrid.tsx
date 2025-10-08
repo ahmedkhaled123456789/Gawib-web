@@ -10,7 +10,7 @@ const CategoryGrid = ({ categories, loading, error }: HeroSectionProps) => {
   if (loading) return <p className="text-center">جاري التحميل...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
-  console.log("Rendering CategoryGrid with categories:", categories);
+  // console.log("Rendering CategoryGrid with categories:", categories);
   const handleCategoryClick = (id: string) => {
     const section = document.getElementById(`category-${id}`);
     if (section) {

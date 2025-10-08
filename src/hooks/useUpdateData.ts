@@ -7,7 +7,7 @@ import baseUrl from "../Api/baseURL";
     headers: { "Content-Type": "multipart/form-data" },
   };
   const res = await baseUrl.put(url, parmas, config);
-  console.log(res.status);
+  // console.log(res.status);
   return res;
 };
 

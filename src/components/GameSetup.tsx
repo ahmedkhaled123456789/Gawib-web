@@ -79,7 +79,7 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
       dispatch(firstGame(gameData))
         .unwrap()
         .then((res: any) => {
-          console.log("✅ firstGame response:", res);
+          // console.log("✅ firstGame response:", res);
 
           const updatedUser = { ...user, is_first_game: true };
           localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -105,7 +105,7 @@ const GameSetup: React.FC<GameSetupProps> = ({ selectedIds }) => {
     dispatch(createGame(newGame))
       .unwrap()
       .then((res: any) => {
-        console.log("✅ Game created successfully:", res);
+        // console.log("✅ Game created successfully:", res);
         toast.success(res?.message || "تم إنشاء اللعبة بنجاح");
         navigate("/GameBoard", { state: { game: res } });
    }).catch((err: any) => {

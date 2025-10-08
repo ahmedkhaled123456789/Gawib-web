@@ -5,13 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
 import { getUser, updateUser } from "../store/auth/authSlice";
 import { toast } from "sonner";
-import {
-  ArrowLeft,
-  Eye,
-  EyeOff,
-  Loader2,
-  Plus,
-} from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
@@ -111,7 +105,6 @@ const ProfilePage = () => {
       dir="rtl"
       className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-2 sm:py-2"
     >
-
       {/* زر العودة خارج الكارد */}
       <div className="w-full max-w-lg mb-4 flex justify-start">
         <button
@@ -128,15 +121,17 @@ const ProfilePage = () => {
           الملف الشخصي
         </h2>
 
-        <div className="flex justify-end mb-6">
-          <button
-            onClick={() => navigate("/add-questions")}
-            className="flex items-center gap-2 px-5 py-2.5 border border-[#064c80] text-[#064c80] bg-white rounded-lg font-medium shadow-sm hover:bg-[#064c80] hover:text-white hover:shadow-md transition-all duration-300 ease-in-out"
-          >
-            <Plus size={20} />
-            إضافة سؤال
-          </button>
-        </div>
+        {user?.data.is_supervisor && (
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={() => navigate("/add-questions")}
+              className="flex items-center gap-2 px-5 py-2.5 border border-[#064c80] text-[#064c80] bg-white rounded-lg font-medium shadow-sm hover:bg-[#064c80] hover:text-white hover:shadow-md transition-all duration-300 ease-in-out"
+            >
+              <Plus size={20} />
+              إضافة سؤال
+            </button>
+          </div>
+        )}
 
         {/* Tabs */}
         <div className="flex justify-center mb-6">

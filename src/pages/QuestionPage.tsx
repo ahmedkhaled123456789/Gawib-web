@@ -17,7 +17,7 @@ const QuestionPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(game);
+  // console.log(game);
 
   const {
     first_team_call,

@@ -20,6 +20,7 @@ interface UserData {
   is_first_game?: boolean;
   purchased_games?: number;
   nationality?: string;
+  is_supervisor?: boolean;
 }
 
 interface AuthState {

@@ -9,6 +9,7 @@ import { applyDiscount, clearDiscount } from "../store/DiscountSlice";
 import { createPayment } from "../store/paymentSlice";
 import { createFreePayment } from "../store/freePaymentSlic";
 import type { AppDispatch, RootState } from "../store";
+import { getSettings } from "../store/settingSlice";
 
 const GamePurchasePage = () => {
   const [activeTab, setActiveTab] = useState<"buy" | "gift">("buy");
@@ -25,9 +26,11 @@ const GamePurchasePage = () => {
   const { loading: paymentLoading } = useSelector(
     (state: RootState) => state.payment
   );
+  const { settings } = useSelector((state: RootState) => state.settings);
 
   useEffect(() => {
     dispatch(getGamePackages());
+    dispatch(getSettings()); // جلب إعدادات التطبيق
   }, [dispatch]);
 
   const handleApplyDiscount = () => {
@@ -54,6 +57,14 @@ const GamePurchasePage = () => {
 
   const displayPrice = discount?.final_amount ?? selectedPackage?.price ?? 0;
 
+  // إيجاد قيمة app_stamp_tax من settings
+  const taxRate =
+    settings?.find((s) => s.key === "app_stamp_tax")?.value || "0";
+  const taxRateNumber = parseFloat(taxRate);
+
+  // حساب الضريبة
+  const taxAmount = (displayPrice * taxRateNumber) / 100;
+
   const handlePayment = () => {
     if (!selectedPackage) {
       toast.error("اختر باقة أولاً");
@@ -64,7 +75,6 @@ const GamePurchasePage = () => {
     if (discount?.final_amount === 0) {
       const freePaymentData = {
         package_id: selectedPackage.id,
-
         receiver_email: activeTab === "gift" ? email || undefined : undefined,
         receiver_phone:
           activeTab === "gift" && phone
@@ -81,15 +91,14 @@ const GamePurchasePage = () => {
           toast.error(err || "حدث خطأ أثناء الدفع المجاني");
         });
 
-      return; // الخروج من الدالة
+      return;
     }
 
-    // الدفع العادي
+    // الدفع العادي مع الضريبة
     const paymentData = {
       package_id: selectedPackage.id,
       amount: displayPrice,
-      tax_amount: 0, //tex_amount
-
+      tax_amount: taxAmount,
       receiver_email: activeTab === "gift" ? email || undefined : undefined,
       receiver_phone:
         activeTab === "gift" && phone
@@ -217,6 +226,10 @@ const GamePurchasePage = () => {
               className="w-5 h-5 filter-blue"
               alt="ريال"
             />
+          </p>
+
+          <p className="text-sm text-gray-600">
+            الضريبة ({taxRateNumber}%) = {taxAmount.toFixed(2)} ريال
           </p>
         </div>
 
