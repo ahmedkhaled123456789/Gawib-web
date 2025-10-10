@@ -27,17 +27,26 @@ const ResetPasswordPage = lazy(() => import("../pages/ResetPasswordPage"));
 const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 const AddQuestions = lazy(() => import("../pages/AddQuestions"));
 
+// مكون تحميل مركزي
+const LoadingSpinner = ({ size = "large" }) => {
+  const spinnerSize = size === "large" ? "h-8 w-8" : "h-6 w-6";
+
+  return (
+    <div
+      className={`flex justify-center items-center ${
+        size === "large" ? "h-screen" : "min-h-40"
+      }`}
+    >
+      <Loader2 className={`animate-spin ${spinnerSize}`} />
+    </div>
+  );
+};
+
 const Routers = () => {
   const token = localStorage.getItem("accessToken");
 
   return (
-    <Suspense
-      fallback={
-        <div className=" h-screen flex justify-center items-center">
-          <Loader2 className="animate-spin mx-auto mt-20" />
-        </div>
-      }
-    >
+    <Suspense fallback={<LoadingSpinner size="large" />}>
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="home" element={<HomePage />} />
@@ -51,17 +60,25 @@ const Routers = () => {
         />
         <Route path="reset-password" element={<ResetPasswordPage />} />
 
-        {/* Protected Route  */}
+        {/* Protected Route */}
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<ProfilePage />} />
           <Route path="game" element={<GamePurchasePage />} />
           <Route path="/payment-return" element={<PaymentPage />} />
           <Route path="/add-questions" element={<AddQuestions />} />
         </Route>
-        
+
         <Route path="payment-success" element={<PaymenSuccess />} />
 
-        <Route path="GameBoard" element={<GameBoard />} />
+        {/* Routes with individual suspense for better UX */}
+        <Route
+          path="GameBoard"
+          element={
+            <Suspense fallback={<LoadingSpinner size="small" />}>
+              <GameBoard />
+            </Suspense>
+          }
+        />
         <Route path="QuestionPage" element={<QuestionPage />} />
         <Route path="Awnser" element={<AwnserPage />} />
         <Route path="congratulations" element={<Congratulations />} />
